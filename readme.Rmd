@@ -1,0 +1,88 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/"
+)
+```
+
+
+# casino <img src="man/figures/logo.png" align="right" alt="" width="120" />
+
+> Welcome to the casino, we've got fun and games  
+> We got everything you want and we know your name  
+> We are the people that can find whatever you may need  
+> And if you got no money, don't worry!  You can play for free!  
+
+## Overview
+
+Play casino games in the R console!
+
+## Installation
+
+```{r, eval = FALSE}
+# Install development version from GitHub
+devtools::install_github("anthonypileggi/casino")
+```
+
+## Getting Started
+
+### Create a Player
+Start off by creating your player.
+
+```{r}
+library(casino)
+
+# Create a new player
+player <- Player$new(name = "Anthony", amount = 100)
+player
+```
+
+Then it's time to head off to the casino!
+What should we play first?
+
+### Poker (5-card stud)
+```{r}
+x <- Poker$new(who = player, type = "stud")
+x$play(bet = 5)
+x$play(bet = 10)
+x$play(bet = 15)
+player <- x$cash_out()     # leave the table
+```
+
+### Poker (5-card draw)
+```{r}
+x <- Poker$new(who = player, type = "draw")
+x$play(bet = 15)
+x$hold(1, 2, 5)
+x$draw()
+player <- x$cash_out()     # leave the table
+```
+
+### Blackjack
+```{r}
+x <- Blackjack$new(who = player)
+for (i in 1:5)
+  x$play(bet = 5)$stand()
+player <- x$cash_out()
+```
+
+### Cashing out
+
+What a fun day at the casino!  Or, was it?
+Let's see how we did...
+```{r}
+# Overall
+player$summarize_history()
+
+# By Game
+player$summarize_history(game)  
+```
+
+Well I guess you'll be back tomorrow.  See you then!
