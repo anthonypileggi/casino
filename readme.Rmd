@@ -15,9 +15,12 @@ knitr::opts_chunk$set(
 
 # casino <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
-> Welcome to the casino, we've got fun and games  
-> We got everything you want and we know your name  
-> We are the people that can find whatever you may need  
+> Welcome to the casino, we've got fun and games
+>
+> We got everything you want and we know your name
+>
+> We are the people that can find whatever you may need
+>
 > And if you got no money, don't worry!  You can play for free!  
 
 ## Overview
