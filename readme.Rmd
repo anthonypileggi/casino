@@ -76,6 +76,15 @@ for (i in 1:5)
 player <- x$cash_out()
 ```
 
+### Slot Machine
+```{r}
+x <- Slots$new(who = player, bet = 1)
+x$play()
+
+# Let's just go for it...
+x$play(spins = 5)
+```
+
 ### Cashing out
 
 What a fun day at the casino!  Or, was it?
