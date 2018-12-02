@@ -10,7 +10,7 @@ Slots <- R6::R6Class("Slots",
     turn = NULL,
     # -- setup machine
     initialize = function(who = NA, bet = 10) {
-      self$who <- who
+      self$who <- Player$new(who)
       self$bet <- bet
       self$reel <- c("!", "@", "#", "$", "%", "^", "&", "*")
       self$reel <- sample(rep(self$reel, (1:length(self$reel)) ^ 3))
@@ -22,13 +22,13 @@ Slots <- R6::R6Class("Slots",
       if (self$turn == 0) {
         cat("Slot Machine: \n")
         cat("Player: ", self$who$name, "\n", sep = "")
-        cat("Bank: ", self$who$amount, "\n", sep = "")
+        cat("Bank: ", self$who$balance, "\n", sep = "")
         cat(" Start a new game with `play().", "\n", sep = "")
       } else if (self$turn == 1) {
         score <- tail(self$who$history, 1)
         cat(" Reels: ", self$print_reels(), "\n", sep = "")
         cat("   You ", ifelse(score$net >= 0, "won", "lost"), " ", score$net, "!\n", sep = "")
-        cat("   Now you have ", self$who$amount, " in your account.\n", sep = "")
+        cat("   Now you have ", self$who$balance, " in your account.\n", sep = "")
       }
       invisible(self)
     },

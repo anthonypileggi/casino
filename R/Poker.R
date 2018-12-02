@@ -16,7 +16,7 @@ Poker <- R6::R6Class("Poker",
       self$decks <- decks
       self$deck <- Deck$new(decks)
       self$type <- type
-      self$who <- who
+      self$who <- Player$new(who)
       self$bet <- bet
       self$turn <- 0
     },
@@ -24,7 +24,7 @@ Poker <- R6::R6Class("Poker",
       if (self$turn == 0) {
         cat("Game: Poker (w/ ", self$decks, " decks): \n")
         cat("Player: ", self$who$name, "\n", sep = "")
-        cat("Bank: ", self$who$amount, "\n", sep = "")
+        cat("Bank: ", self$who$balance, "\n", sep = "")
         cat(" Start a new game with `play().", "\n", sep = "")
       } else if (self$turn == 1) {
         cat(" Hand: ", self$print_hand(), "\n", sep = "")
@@ -33,11 +33,19 @@ Poker <- R6::R6Class("Poker",
         score <- tail(self$history, 1)
         cat(" Hand: ", paste(self$hand$value, self$hand$suit, collapse = ", "), "\n", sep = "")
         cat(" Result: ", score$outcome, "\n", sep = "")
-        cat("   You ", ifelse(score$net >= 0, "won", "lost"), " ", score$net, "!\n", sep = "")
-        cat("   Now you have ", self$who$amount, " in your account.\n", sep = "")
+        #cat("   You ", ifelse(score$net >= 0, "won", "lost"), " ", score$net, "!\n", sep = "")
+        self$print_outcome()
+        cat("   Now you have ", self$who$balance, " in your account.\n", sep = "")
         cat("Do you want to `play()` again?", "\n", sep = "")
       }
       invisible(self)
+    },
+
+    # print helpers (for adding color to terminal output)
+    print_outcome = function() {
+      score <- tail(self$history, 1)
+      color_f <- switch(1 + (score$net >= 0), crayon::red, crayon::green)
+      cat(color_f("   You ", ifelse(score$net >= 0, "won", "lost"), " ", score$net, "!\n", sep = ""))
     },
     print_hand = function() {
       paste(

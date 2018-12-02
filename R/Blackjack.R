@@ -14,7 +14,7 @@ Blackjack <- R6::R6Class("Blackjack",
     initialize = function(decks = 1, who = NA, bet = 10) {
       self$decks <- decks
       self$deck <- Deck$new(decks)
-      self$who <- who
+      self$who <- Player$new(who)
       self$bet <- bet
     },
     print = function(...) {
