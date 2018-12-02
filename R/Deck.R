@@ -3,20 +3,18 @@
 #' @export
 Deck <- R6::R6Class("Deck",
   public = list(
+
     decks = NULL,
     deck = NULL,
     discard = NULL,
+
     initialize = function(decks = 1) {
       self$decks <- decks
-      self$deck <-
-        tidyr::crossing(
-          value = c(2:10, "J", "Q", "K", "A"),
-          #suit = c("heart", "diamond", "spade", "club")
-          suit = c("♥", "♦", "♠",  "♣")
-        )
-      #self$deck <- self$deck$shuffle()   # is there any way to use methods during initialization?
-      self$deck <- dplyr::sample_n(self$deck, nrow(self$deck))
+      private$create()
+      self$shuffle()
     },
+
+    # -- print method
     print = function(...) {
       cat("Deck: \n")
       cat("  Decks: ", self$decks, "\n", sep = "")
@@ -26,10 +24,15 @@ Deck <- R6::R6Class("Deck",
       cat("  Next card:  ", self$deck$value[1], " ", self$deck$suit[1], "s\n", sep = "")
       invisible(self)
     },
+
+    # -- reset deck and shuffle
     shuffle = function() {
+      private$create()
       self$deck <- dplyr::sample_n(self$deck, nrow(self$deck))
       invisible(self)
     },
+
+    # -- draw 'n' cards from the top of the deck
     draw = function(n = 1) {
       # TODO: shuffling in the middle of a game is probably not okay!
       if (self$cards_left() < n)
@@ -38,11 +41,27 @@ Deck <- R6::R6Class("Deck",
       self$deck <- self$deck[-(1:n), ]
       cards
     },
+
+    # -- how many cards are left in the deck?
     cards_left = function() {
       nrow(self$deck)
     }
+
   ),
+
+
   private = list(
+
+    # create a new set of decks
+    create = function() {
+      deck <-
+        tidyr::crossing(
+          value = c(2:10, "J", "Q", "K", "A"),
+          #suit = c("heart", "diamond", "spade", "club")
+          suit = c("♥", "♦", "♠",  "♣")
+        )
+      self$deck <- purrr::map_df(1:self$decks, ~deck)
+    }
 
   )
 )
