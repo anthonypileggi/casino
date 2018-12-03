@@ -2,21 +2,28 @@
 #' @importFrom magrittr "%>%"
 #' @export
 Blackjack <- R6::R6Class("Blackjack",
+
   public = list(
+
     decks = NULL,
     bet = NULL,
-    deck = NULL,
     who = NULL,
+
     player = NULL,
     dealer = NULL,
+
     history = NULL,
     active = FALSE,
+
+    # setup blackjack table
     initialize = function(decks = 1, who = NA, bet = 10) {
       self$decks <- decks
-      self$deck <- Deck$new(decks)
+      private$deck <- Deck$new(decks)
       self$who <- Player$new(who)
       self$bet <- bet
     },
+
+    # print method
     print = function(...) {
       cat("Blackjack (w/ ", self$decks, " decks): \n")
       cat("  Player: ", self$who$name, "\n", sep = "")
@@ -32,28 +39,29 @@ Blackjack <- R6::R6Class("Blackjack",
       }
       invisible(self)
     },
+
     # -- prep
-    deal = function(to = "player") {
-      self[[to]] <- dplyr::bind_rows(self[[to]], self$deck$draw())
-    },
-    # -- gameplay
+
+    # -- start a new game
     play = function(bet = self$bet) {
       self$bet <- bet
       self$who$bet(bet)
       self$player <- self$dealer <- NULL
-      if (self$deck$cards_left() < 15)
-        self$deck$shuffle()
+      if (private$deck$cards_left() < 15)
+        private$deck$shuffle()
       for (i in 1:2) {
-        self$deal("player")
-        self$deal("dealer")
+        private$deal("player")
+        private$deal("dealer")
       }
       self$active <- TRUE
       print(self)
       invisible(self)
     },
+
+    # -- hit
     hit = function() {
       if (self$active)
-        self$deal("player")
+        private$deal("player")
       if (private$summarize_hand("player")$total > 21) {
         private$record()
       } else {
@@ -61,14 +69,18 @@ Blackjack <- R6::R6Class("Blackjack",
       }
       invisible(self)
     },
+
+    # -- stand
     stand = function() {
       private$play_dealer()
       private$record()
     },
+
     # -- spit out post-game player info
     cash_out = function() {
       self$who
     },
+
     # get the result of a single game
     result = function() {
       p <- private$summarize_hand("player")$total
@@ -94,10 +106,18 @@ Blackjack <- R6::R6Class("Blackjack",
     }
   ),
 
+  active = list(),
 
   private = list(
 
-    # finish the dealers turn
+    deck = NULL,
+
+    # -- deal a card to player/dealer
+    deal = function(to = "player") {
+      self[[to]] <- dplyr::bind_rows(self[[to]], private$deck$draw())
+    },
+
+    # -- finish the dealers turn
     play_dealer = function() {
       keep_going <- TRUE
       while (keep_going) {
@@ -105,12 +125,12 @@ Blackjack <- R6::R6Class("Blackjack",
         if (total > 16) {
           keep_going <- FALSE
         } else {
-          self$deal("dealer")
+          private$deal("dealer")
         }
       }
     },
 
-    # summarize a single hand (player or dealer)
+    # -- summarize a single hand (player or dealer)
     summarize_hand = function(to = "player") {
       self[[to]] %>%
         dplyr::mutate(
@@ -126,7 +146,7 @@ Blackjack <- R6::R6Class("Blackjack",
         )
     },
 
-    # record the results of a single game
+    # -- record the results of a single game
     record = function() {
       result <- self$result()
       print(result)
