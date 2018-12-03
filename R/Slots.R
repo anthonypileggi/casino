@@ -3,18 +3,18 @@
 #' @export
 Slots <- R6::R6Class("Slots",
   public = list(
+
     bet = NULL,
     who = NULL,
     reel = NULL,
     reels = NULL,
     turn = NULL,
+
     # -- setup machine
     initialize = function(who = NA, bet = 10) {
       self$who <- Player$new(who)
       self$bet <- bet
-      self$reel <- c("!", "@", "#", "$", "%", "^", "&", "*")
-      self$reel <- sample(rep(self$reel, (1:length(self$reel)) ^ 3))
-      self$turn <- 0
+      private$make_reel()
     },
 
     # -- print
@@ -65,6 +65,13 @@ Slots <- R6::R6Class("Slots",
   ),
 
   private = list(
+
+    # -- create a reel
+    make_reel = function() {
+      reel <- c("!", "@", "#", "$", "%", "^", "&", "*")
+      self$reel <- sample(rep(reel, (1:length(reel)) ^ 3))
+      self$turn <- 0
+    },
 
     # -- spin reels
     spin = function() {
