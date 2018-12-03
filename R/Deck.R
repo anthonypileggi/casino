@@ -8,6 +8,7 @@ Deck <- R6::R6Class("Deck",
     deck = NULL,
     discard = NULL,
 
+    # -- create a new deck
     initialize = function(decks = 1) {
       self$decks <- decks
       private$create()
