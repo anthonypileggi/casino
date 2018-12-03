@@ -15,7 +15,7 @@ Poker <- R6::R6Class("Poker",
     initialize = function(decks = 1, type = c("draw", "stud"), who = NA, bet = 10) {
       self$decks <- decks
       self$deck <- Deck$new(decks)
-      self$type <- type
+      self$type <- type[1]
       self$who <- Player$new(who)
       self$bet <- bet
       self$turn <- 0
@@ -68,6 +68,7 @@ Poker <- R6::R6Class("Poker",
     },
     # -- gameplay
     play = function(bet = self$bet) {
+      self$bet <- bet
       self$who$bet(bet)
       self$hand <- NULL
       if (self$deck$cards_left() < 10)
@@ -83,12 +84,16 @@ Poker <- R6::R6Class("Poker",
       }
       invisible(self)
     },
+
+    # -- select cards to HOLD
     hold = function(...) {
       id <- c(...)
       self$keep[id] <- TRUE
       print(self)
       invisible(self)
     },
+
+    # -- draw more cards (pending ones with HOLD status)
     draw = function() {
       if (self$turn == 1) {
         n <- sum(!self$keep)
@@ -100,6 +105,8 @@ Poker <- R6::R6Class("Poker",
       }
       invisible(self)
     },
+
+    # -- end a poker game; determine outcome; record results
     end_game = function() {
       score <- self$score()
       self$history <- dplyr::bind_rows(self$history, score)
@@ -107,10 +114,7 @@ Poker <- R6::R6Class("Poker",
       print(self)
       self$turn <- 0
     },
-    # -- spit out post-game player info
-    cash_out = function() {
-      self$who
-    },
+
     # -- score a poker hand
     score = function() {
       self$hand %>%
@@ -131,6 +135,7 @@ Poker <- R6::R6Class("Poker",
           uniques = length(table(value)),
           n_pairs = sum(table(value) == 2),
           n_kind = max(table(value)),
+          mode = tail(as.numeric(names(sort(table(value)))), 1),
           outcome =
             dplyr::case_when(
               all(value %in% 10:14) & is_flush ~ "royal flush",
@@ -141,7 +146,8 @@ Poker <- R6::R6Class("Poker",
               is_straight ~ "straight",
               max(table(value)) == 3 ~ "3-of-a-kind",
               n_pairs == 2 & n_kind == 2 ~ "two pair",
-              n_pairs == 1 & n_kind == 2 ~ "one pair",
+              n_pairs == 1 & n_kind == 2 & mode > 10 ~ "one pair (jacks or better)",
+              n_pairs == 1 & n_kind == 2 & mode <= 10 ~ "one pair",
               TRUE ~ paste(old_value[which.max(value)], "high")
             )
         ) %>%
@@ -161,17 +167,18 @@ Poker <- R6::R6Class("Poker",
 
   private = list(
 
+    # -- payout table
     payout = dplyr::tribble(
         ~outcome, ~multiplier,
-        "royal flush", 100,
-        "straight flush", 50,
-        "4-of-a-kind", 40,
-        "full house", 30,
-        "flush", 25,
-        "straight", 20,
-        "3-of-a-kind", 15,
-        "two pair", 5,
-        "one pair", 1
+        "royal flush", 800,
+        "straight flush", 200,
+        "4-of-a-kind", 25,
+        "full house", 10,
+        "flush", 7,
+        "straight", 5,
+        "3-of-a-kind", 3,
+        "two pair", 2,
+        "one pair (jacks or better)", 1
       )
 
   )
