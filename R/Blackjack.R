@@ -21,6 +21,7 @@ Blackjack <- R6::R6Class("Blackjack",
       private$deck <- Deck$new(decks)
       self$who <- Player$new(who)
       self$bet <- bet
+      print(self)
     },
 
     # print method
@@ -34,15 +35,11 @@ Blackjack <- R6::R6Class("Blackjack",
         p <- private$score_hand("player")$total
         d <- private$score_hand("dealer")$total
         cat(" Player Hand: {", paste(self$player$value, collapse = ", "), "} = ", p, "\n", sep = "")
-        cat(self$print_dealer())
+        cat(private$print_dealer())
         cat("Will you `hit()` or `stand()`?", "\n", sep = "")
       }
       # TODO: print outcome of a game
       invisible(self)
-    },
-
-    print_dealer = function() {
-      paste(" Dealer Hand: {?, ", paste(self$dealer$value[-1], collapse = ", "), "} = ?\n", sep = "")
     },
 
     # -- start a new game
@@ -57,6 +54,7 @@ Blackjack <- R6::R6Class("Blackjack",
         private$deal("dealer")
       }
       self$active <- TRUE
+      private$check_scores()    # check if anyone has 21 yet
       print(self)
       invisible(self)
     },
@@ -65,17 +63,13 @@ Blackjack <- R6::R6Class("Blackjack",
     hit = function() {
       if (self$active)
         private$deal("player")
-      if (private$score_hand("player")$total > 21) {
-        private$end_game()
-      } else {
-        print(self)
-      }
+      private$check_scores()
+      #print(self)
       invisible(self)
     },
 
     # -- stand
     stand = function() {
-      private$play_dealer()
       private$end_game()
     }
   ),
@@ -85,6 +79,11 @@ Blackjack <- R6::R6Class("Blackjack",
   private = list(
 
     deck = NULL,
+
+    # -- print-helper: print the dealer's hand
+    print_dealer = function() {
+      paste(" Dealer Hand: {?, ", paste(self$dealer$value[-1], collapse = ", "), "} = ?\n", sep = "")
+    },
 
     # -- deal a card to player/dealer
     deal = function(to = "player") {
@@ -149,7 +148,7 @@ Blackjack <- R6::R6Class("Blackjack",
       } else {
         scores %>%
           dplyr::filter(total <= 21) %>%
-          head(1)
+          tail(1)
       }
     },
 
@@ -175,7 +174,17 @@ Blackjack <- R6::R6Class("Blackjack",
         ),
         net = win - bet
       )
-    }
+    },
 
+    # -- check for blackjack and/or 21, and if found end the game
+    check_scores = function() {
+      score <- private$score()
+      if (score$player == 21 & nrow(self$player) == 2)
+          message("You got Blackjack!\n")
+      if (score$dealer == 21 & nrow(self$dealer) == 2)
+        message("Dealer got Blackjack!\n")
+      if (score$player >= 21)
+        private$end_game()
+    }
   )
 )
