@@ -5,18 +5,26 @@ Player <- R6::R6Class("Player",
 
   public = list(
 
-    # player name
+    # -- player name
     name = NULL,
 
+    # -- create/load player profile (via local '.casino' file)
     initialize = function(name = "Joe Player") {
       self$name <- name
       private$recover()                # check for (and load) existing player history
-      if (private$.balance == 0) {     # if player has 0 balance
-        message()
+      if (private$.balance == 0)       # if player has 0 balance, reset them!
         self$reset()
-      }
-
       private$update()                 # add/update data in '.casino'
+    },
+
+    # -- print method (player info)
+    print = function(...) {
+      cat("Player: \n")
+      cat("  Name: ", self$name, "\n", sep = "")
+      cat("  Balance:  ", private$.balance, "\n", sep = "")
+      cat("  Level:  ", private$.level, "\n", sep = "")
+      cat("  Played:  ", nrow(private$.history), "\n", sep = "")
+      invisible(self)
     },
 
     # -- list existing player profiles
@@ -33,31 +41,28 @@ Player <- R6::R6Class("Player",
       message("Reseting profile for ", self$name, "...\n", sep = "")
       private$.balance <- 100
       private$.level <- 1
-      private$.history <- NULL
+      private$.history <- private$.history[-(1:nrow(private$.history)), ]
       private$update()
-      invisible(self)
-    },
-
-    # -- print player info
-    print = function(...) {
-      cat("Player: \n")
-      cat("  Name: ", self$name, "\n", sep = "")
-      cat("  Balance:  ", private$.balance, "\n", sep = "")
-      cat("  Level:  ", private$.level, "\n", sep = "")
-      cat("  Played:  ", nrow(private$.history), "\n", sep = "")
       invisible(self)
     },
 
     # -- place a bet
     bet = function(amount) {
-      new_money <- private$.balance - amount
-      if (new_money >= 0) {
-        private$.balance <- new_money
-        message(paste0("You bet ", amount, "; you have ", new_money, " left."))
-      } else {
-        stop(paste0("You cannot bet ", amount, "; you only have ", private$.balance, "!"), call. = FALSE)
+      # reset balance if currently at 0
+      if (private$.balance == 0)
+        self$reset()
+
+      # don't bet more than you have
+      if (amount > private$.balance) {
+        message(paste0("You cannot bet ", amount, "; you only have ", private$.balance, "!"))
+        amount <- private$.balance
       }
-      private$update()
+
+      if (amount > 0) {
+        private$.balance <- private$.balance - amount
+        message(paste0("You bet ", amount, "; you have ", private$.balance, " left."))
+        private$update()
+      }
     },
 
     # -- record the outcome of a single game played; update 'amount' in account
@@ -69,8 +74,8 @@ Player <- R6::R6Class("Player",
       private$update()
     },
 
-    # -- player history summary
-    summarize_history = function(...) {
+    # -- summarize player gameplay history
+    summary = function(...) {
       groups <- rlang::quos(...)
       private$.history %>%
         dplyr::group_by(!!!groups) %>%
@@ -88,6 +93,7 @@ Player <- R6::R6Class("Player",
       if (missing(value)) {
         private$.balance
       } else {
+        cat(crayon::red("Oh, you want more money? LOL Nice try! :-)"))
         stop("Oh, you want more money? LOL Nice try! :-)", call. = FALSE)
       }
     },
@@ -95,14 +101,16 @@ Player <- R6::R6Class("Player",
       if (missing(value)) {
         private$.level
       } else {
-        stop("Oh, you want more skills? LOL Nice try! :-)", call. = FALSE)
+        cat(crayon::red("If you want more skill levels, you'll need to actually play!\n"))
+        #stop("Oh, you want more skills? LOL Nice try! :-)", call. = FALSE)
       }
     },
     history = function(value) {
       if (missing(value)) {
         private$.history
       } else {
-        stop("Are you Marty McFly?!  You cannot change the past.", call. = FALSE)
+        cat(crayon::red("Nice try Marty McFly, but you cannot change the past!\n"))
+        #stop("Are you Marty McFly?!  You cannot change the past.", call. = FALSE)
       }
     }
   ),
@@ -112,7 +120,7 @@ Player <- R6::R6Class("Player",
     # everyone starts with a Level 1 w/ a balance of 100
     .balance = 100,
     .level = 1,
-    .history = NULL,
+    .history = tibble::tibble(game = character(), outcome = character(), bet = numeric(), win = numeric(), net = numeric()),
 
     # level progression
     levels = tibble::tibble(level = 1:99, threshold = 2 ^ level),
