@@ -68,7 +68,6 @@ Poker <- R6::R6Class("Poker",
     },
     # -- gameplay
     play = function(bet = self$bet) {
-      self$bet <- bet
       self$who$bet(bet)
       self$hand <- NULL
       if (self$deck$cards_left() < 10)
