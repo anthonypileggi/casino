@@ -9,10 +9,10 @@ Blackjack <- R6::R6Class("Blackjack",
     bet = NULL,
     who = NULL,
 
+    # TODO: make the 'dealer' object private (so player cannot see the first card!!)
     player = NULL,
     dealer = NULL,
 
-    history = NULL,
     active = FALSE,
 
     # setup blackjack table
@@ -25,22 +25,25 @@ Blackjack <- R6::R6Class("Blackjack",
 
     # print method
     print = function(...) {
-      cat("Blackjack (w/ ", self$decks, " decks): \n")
-      cat("  Player: ", self$who$name, "\n", sep = "")
-      cat("  Bet: ", self$bet, "\n", sep = "")
-      if (self$active) {
-        p <- private$summarize_hand("player")$total
-        d <- private$summarize_hand("dealer")$total
-        cat(" Player Hand: {", paste(self$player$value, collapse = ", "), "} = ", p, "\n", sep = "")
-        cat(" Dealer Hand: {", paste(self$dealer$value, collapse = ", "), "} = ", d, "\n", sep = "")
-        cat("Will you `hit()` or `stand()`?", "\n", sep = "")
+      if (!self$active) {
+        cat("Blackjack (w/ ", self$decks, " decks): \n")
+        cat("Player: ", self$who$name, "\n", sep = "")
+        cat("Bank: ", self$who$balance, "\n", sep = "")
+        cat("Start a new game with `play()`.", "\n", sep = "")
       } else {
-        cat(" Start a new game with `play().", "\n", sep = "")
+        p <- private$score_hand("player")$total
+        d <- private$score_hand("dealer")$total
+        cat(" Player Hand: {", paste(self$player$value, collapse = ", "), "} = ", p, "\n", sep = "")
+        cat(self$print_dealer())
+        cat("Will you `hit()` or `stand()`?", "\n", sep = "")
       }
+      # TODO: print outcome of a game
       invisible(self)
     },
 
-    # -- prep
+    print_dealer = function() {
+      paste(" Dealer Hand: {?, ", paste(self$dealer$value[-1], collapse = ", "), "} = ?\n", sep = "")
+    },
 
     # -- start a new game
     play = function(bet = self$bet) {
@@ -62,8 +65,8 @@ Blackjack <- R6::R6Class("Blackjack",
     hit = function() {
       if (self$active)
         private$deal("player")
-      if (private$summarize_hand("player")$total > 21) {
-        private$record()
+      if (private$score_hand("player")$total > 21) {
+        private$end_game()
       } else {
         print(self)
       }
@@ -73,18 +76,87 @@ Blackjack <- R6::R6Class("Blackjack",
     # -- stand
     stand = function() {
       private$play_dealer()
-      private$record()
+      private$end_game()
+    }
+  ),
+
+  active = list(),
+
+  private = list(
+
+    deck = NULL,
+
+    # -- deal a card to player/dealer
+    deal = function(to = "player") {
+      self[[to]] <- dplyr::bind_rows(self[[to]], private$deck$draw())
     },
 
-    # -- spit out post-game player info
-    cash_out = function() {
-      self$who
+    # -- end the game
+    end_game = function() {
+      private$play_dealer()
+      result <- private$score()
+      self$who$record(game = "Blackjack", outcome = result$outcome, bet = result$bet, win = result$win, net = result$net)
+      self$active <- FALSE
     },
 
-    # get the result of a single game
-    result = function() {
-      p <- private$summarize_hand("player")$total
-      d <- private$summarize_hand("dealer")$total
+    # -- finish the dealers turn
+    play_dealer = function() {
+      keep_going <- TRUE
+      while (keep_going) {
+        total <- private$score_hand("dealer")$total
+        if (total > 16) {
+          keep_going <- FALSE
+        } else {
+          private$deal("dealer")
+        }
+      }
+    },
+
+    # Scoring
+    # -- get all possible ace totals for a hand
+    ace_totals = function(to = "player") {
+      n_aces <- sum(self[[to]] == "A")
+      if (n_aces == 0)
+        return(0)
+      ace_combos <- combn(rep(c(1, 11), n_aces), n_aces)
+      sort(
+        unique(
+          apply(ace_combos, 2, sum)
+        )
+      )
+    },
+    # -- score a single hand (player or dealer)
+    score_hand = function(to = "player") {
+      score <- self[[to]] %>%
+        dplyr::mutate(
+          value = dplyr::case_when(
+            value %in% c("J", "Q", "K") ~ 10,
+            value != "A" ~ suppressWarnings(as.numeric(value))
+          )
+        ) %>%
+        dplyr::summarise(
+          cards = dplyr::n(),
+          total = sum(value, na.rm = TRUE)
+        )
+      # get all score possiblities (based on Aces)
+      scores <- purrr::map_df(
+        private$ace_totals(to),
+        ~dplyr::mutate(score, total = total + .x)
+        )
+      # return the 'best' score among all options
+      if (all(scores$total > 21)) {
+        head(scores, 1)
+      } else {
+        scores %>%
+          dplyr::filter(total <= 21) %>%
+          head(1)
+      }
+    },
+
+    # -- get the result of a single game
+    score = function() {
+      p <- private$score_hand("player")$total
+      d <- private$score_hand("dealer")$total
       tibble::tibble(
         player = p,
         dealer = d,
@@ -104,55 +176,6 @@ Blackjack <- R6::R6Class("Blackjack",
         net = win - bet
       )
     }
-  ),
 
-  active = list(),
-
-  private = list(
-
-    deck = NULL,
-
-    # -- deal a card to player/dealer
-    deal = function(to = "player") {
-      self[[to]] <- dplyr::bind_rows(self[[to]], private$deck$draw())
-    },
-
-    # -- finish the dealers turn
-    play_dealer = function() {
-      keep_going <- TRUE
-      while (keep_going) {
-        total <- private$summarize_hand("dealer")$total
-        if (total > 16) {
-          keep_going <- FALSE
-        } else {
-          private$deal("dealer")
-        }
-      }
-    },
-
-    # -- summarize a single hand (player or dealer)
-    summarize_hand = function(to = "player") {
-      self[[to]] %>%
-        dplyr::mutate(
-          value = dplyr::case_when(
-            value %in% c("J", "Q", "K") ~ 10,
-            value %in% "A" ~ 11,        # TODO: spread out all options, esp. if there are > 1 Ace
-            TRUE ~ suppressWarnings(as.numeric(value))
-          )
-        ) %>%
-        dplyr::summarise(
-          cards = dplyr::n(),
-          total = sum(value)
-        )
-    },
-
-    # -- record the results of a single game
-    record = function() {
-      result <- self$result()
-      print(result)
-      self$history <- dplyr::bind_rows(self$history, result)
-      self$who$record(game = "Blackjack", outcome = result$outcome, bet = result$bet, win = result$win, net = result$net)
-      self$active <- FALSE
-    }
   )
 )
