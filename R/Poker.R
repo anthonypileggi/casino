@@ -3,22 +3,29 @@
 #' @export
 Poker <- R6::R6Class("Poker",
   public = list(
+
     decks = NULL,
     type = NULL,
     bet = NULL,
     deck = NULL,
     who = NULL,
+
     hand = NULL,
     keep = NULL,
-    history = NULL,
     turn = NULL,
-    initialize = function(decks = 1, type = c("draw", "stud"), who = NA, bet = 10) {
+
+    verbose = NULL,
+    sound = NULL,
+
+    initialize = function(decks = 1, type = c("draw", "stud"), who = NA, bet = 10, verbose = TRUE, sound = TRUE) {
       self$decks <- decks
       self$deck <- Deck$new(decks)
       self$type <- type[1]
       self$who <- Player$new(who)
       self$bet <- bet
       self$turn <- 0
+      self$verbose <- verbose
+      self$sound <- sound
     },
     print = function(...) {
       if (self$turn == 0) {
@@ -30,7 +37,7 @@ Poker <- R6::R6Class("Poker",
         cat(" Hand: ", self$print_hand(), "\n", sep = "")
         cat("Choose cards to `hold()`` and then `draw()`.", "\n", sep = "")
       } else if (self$turn == 2) {
-        score <- tail(self$history, 1)
+        score <- tail(self$who$history, 1)
         cat(" Hand: ", paste(self$hand$value, self$hand$suit, collapse = ", "), "\n", sep = "")
         cat(" Result: ", score$outcome, "\n", sep = "")
         #cat("   You ", ifelse(score$net >= 0, "won", "lost"), " ", score$net, "!\n", sep = "")
@@ -43,7 +50,7 @@ Poker <- R6::R6Class("Poker",
 
     # print helpers (for adding color to terminal output)
     print_outcome = function() {
-      score <- tail(self$history, 1)
+      score <- tail(self$who$history, 1)
       color_f <- switch(1 + (score$net >= 0), crayon::red, crayon::green)
       cat(color_f("   You ", ifelse(score$net >= 0, "won", "lost"), " ", score$net, "!\n", sep = ""))
     },
@@ -68,8 +75,10 @@ Poker <- R6::R6Class("Poker",
     },
     # -- gameplay
     play = function(bet = self$bet) {
-      self$bet <- bet
-      self$who$bet(bet)
+      if (self$turn != 0)
+        stop("You already started a game!")
+      #self$bet <- bet
+      self$bet <- self$who$bet(bet)
       self$hand <- NULL
       if (self$deck$cards_left() < 10)
         self$deck$shuffle()
@@ -77,7 +86,8 @@ Poker <- R6::R6Class("Poker",
       self$keep <- rep(FALSE, 5)
       if (self$type == "draw") {
         self$turn <- 1
-        print(self)
+        if (self$verbose)
+          print(self)
       } else if (self$type == "stud") {
         self$turn <- 2
         self$end_game()
@@ -89,7 +99,8 @@ Poker <- R6::R6Class("Poker",
     hold = function(...) {
       id <- c(...)
       self$keep[id] <- TRUE
-      print(self)
+      if (self$verbose)
+        print(self)
       invisible(self)
     },
 
@@ -109,9 +120,11 @@ Poker <- R6::R6Class("Poker",
     # -- end a poker game; determine outcome; record results
     end_game = function() {
       score <- self$score()
-      self$history <- dplyr::bind_rows(self$history, score)
       self$who$record(game = "Poker", outcome = score$outcome, bet = score$bet, win = score$win, net = score$net)
-      print(self)
+      if (self$sound && score$win > 0)
+        beepr::beep("fanfare")
+      if (self$verbose)
+        print(self)
       self$turn <- 0
     },
 
