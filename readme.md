@@ -108,8 +108,8 @@ x <- Poker$new(who = "Player 1", type = "stud", bet = 10)
 # play a game
 x$play()
 #> You bet 10; you have 90 left.
-#>  Hand: 8 ♥, 5 ♦, 3 ♥, 2 ♥, Q ♦
-#>  Result: Q high
+#>  Hand: A ♦, K ♥, 4 ♣, J ♠, 6 ♥
+#>  Result: A high
 #>    You lost -10!
 #>    Now you have 90 in your account.
 #> Do you want to `play()` again?
@@ -117,8 +117,8 @@ x$play()
 # specify a different bet for this game
 x$play(bet = 5)
 #> You bet 5; you have 85 left.
-#>  Hand: 6 ♦, 9 ♦, 4 ♠, J ♦, 4 ♣
-#>  Result: one pair
+#>  Hand: 3 ♥, J ♦, 9 ♠, 2 ♦, 4 ♠
+#>  Result: J high
 #>    You lost -5!
 #>    Now you have 85 in your account.
 #> Do you want to `play()` again?
@@ -133,15 +133,15 @@ x <- Poker$new(who = "Player 1", type = "draw", bet = 20)
 # play a game
 x$play()
 #> You bet 20; you have 65 left.
-#>  Hand: A ♥, Q ♥, 6 ♥, 8 ♠, Q ♣
+#>  Hand: K ♠, K ♥, 5 ♦, 4 ♣, 7 ♠
 #> Choose cards to `hold()`` and then `draw()`.
 
 x$hold(1, 2, 5)    # hold cards in positions {1, 2, 5}
-#>  Hand: A ♥, Q ♥, 6 ♥, 8 ♠, Q ♣
+#>  Hand: K ♠, K ♥, 5 ♦, 4 ♣, 7 ♠
 #> Choose cards to `hold()`` and then `draw()`.
 
 x$draw()           # draw new cards for positions {3, 4}
-#>  Hand: A ♥, Q ♥, Q ♣, 10 ♠, 2 ♣
+#>  Hand: K ♠, K ♥, 7 ♠, Q ♠, 2 ♣
 #>  Result: one pair (jacks or better)
 #>    You won 0!
 #>    Now you have 85 in your account.
@@ -156,17 +156,12 @@ x <- Blackjack$new(who = "Player 1", bet = 25)
 
 x$play()$stand()
 #> You bet 25; you have 60 left.
-#> You got Blackjack!
-#> Game over! player wins
-#>   You won 25!
-#>   Now you have 110 in your account.
-#> Blackjack (w/  1  decks): 
-#> Player: Player 1
-#> Bank: 110
-#> Start a new game with `play()`.
-#> Game over! player wins
-#>   You won 25!
-#>   Now you have 160 in your account.
+#>  Player Hand: {6, 5} = 11
+#>  Dealer Hand: {?, 2} = ?
+#> Will you `hit()` or `stand()`?
+#> Game over! dealer wins
+#>   You lost -25!
+#>   Now you have 60 in your account.
 ```
 
 ### Slot Machine
@@ -176,22 +171,22 @@ x <- Slots$new(who = "Player 1", bet = 1)
 #> Loading player profile...
 
 x$play()
-#> You bet 1; you have 159 left.
-#>  Reels: % & *
+#> You bet 1; you have 59 left.
+#>  Reels: & & *
 #>    You lost -1!
-#>    Now you have 159 in your account.
+#>    Now you have 59 in your account.
 #> Do you want to `play()` again?
 
 # set the `spins` argument to play > 1 game at a time
 x$play(spins = 2)
-#> You bet 1; you have 158 left.
-#>  Reels: ^ ^ ^
-#>    You won 215!
-#>    Now you have 374 in your account.
-#> You bet 1; you have 373 left.
-#>  Reels: * ^ ^
+#> You bet 1; you have 58 left.
+#>  Reels: * % *
 #>    You lost -1!
-#>    Now you have 373 in your account.
+#>    Now you have 58 in your account.
+#> You bet 1; you have 57 left.
+#>  Reels: % % *
+#>    You lost -1!
+#>    Now you have 57 in your account.
 #> Do you want to `play()` again?
 ```
 
@@ -240,7 +235,7 @@ Wait, how much did you say I owe?
 player <- x$who
 
 player$debt()
-#> [1] 200
+#> [1] 300
 ```
 
 It's closing time...
@@ -257,16 +252,16 @@ player$summary()
 #> # A tibble: 1 x 4
 #>   games   bet   win   net
 #>   <int> <dbl> <dbl> <dbl>
-#> 1   158   856   753  -103
+#> 1   157   598   401  -197
 
 # By Game
 player$summary(game)  
 #> # A tibble: 3 x 5
 #>   game      games   bet   win   net
 #>   <chr>     <int> <dbl> <dbl> <dbl>
-#> 1 Blackjack    52   268   258   -10
-#> 2 Poker        53   535   210  -325
-#> 3 Slots        53    53   285   232
+#> 1 Blackjack    51   275   230   -45
+#> 2 Poker        53   270    70  -200
+#> 3 Slots        53    53   101    48
 ```
 
 Let's relive the excitement!

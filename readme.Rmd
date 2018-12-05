@@ -28,7 +28,13 @@ knitr::opts_chunk$set(
 
 Play casino games in the R console!
 
+Available games:
 
+  - Poker (5-card draw/stud)
+  - Blackjack
+  - Slot machine
+
+  
 ## Installation
 
 ```{r, eval = FALSE}
@@ -36,10 +42,9 @@ Play casino games in the R console!
 devtools::install_github("anthonypileggi/casino")
 ```
 
-## Quick Start
 
-Use the `play()` function to start playing immediately.
-It provides a guided casino experience.
+## Quick Start
+Are you getting impatient already?  Then use `play()` to get started immediately.
 
 ```{r, eval = FALSE}
 casino::play()
