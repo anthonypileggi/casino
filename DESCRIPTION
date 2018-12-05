@@ -1,13 +1,13 @@
 Package: casino
 Type: Package
-Title: R Casino Games
+Title: Casino Games in R
 Version: 0.1.0
-Author: Anthony Pileggi
-Maintainer: Anthony Pileggi <apileggi20@gmail.com>
-Description: Play casino games in the R console.
-  Create a player and build your fortune.
-  Choose from Poker (5-card stud/draw) or Blackjack.
-  Show the Gambler's Ruin what's up!
+Authors@R: c(
+    person("Anthony", "Pileggi", , "apileggi20@gmail.com", c("aut", "cre"))
+    )
+Description: Play casino games in the R console,
+  including poker, blackjack, and a slot machine.
+  Try to build your fortune before you succomb to the gambler's ruin!
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
