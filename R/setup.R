@@ -1,5 +1,5 @@
 
-#' Allow casino to store player profiles in a local file (and)
+#' Allow casino to store player profiles in a local file
 #' @param file full path to file
 #' @export
 setup <- function(file = file.path(getwd(), ".casino")) {

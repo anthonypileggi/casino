@@ -2,7 +2,7 @@
 % Please edit documentation in R/setup.R
 \name{setup}
 \alias{setup}
-\title{Allow casino to store player profiles in a local file (and)}
+\title{Allow casino to store player profiles in a local file}
 \usage{
 setup(file = file.path(getwd(), ".casino"))
 }
@@ -10,5 +10,5 @@ setup(file = file.path(getwd(), ".casino"))
 \item{file}{full path to file}
 }
 \description{
-Allow casino to store player profiles in a local file (and)
+Allow casino to store player profiles in a local file
 }
