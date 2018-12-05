@@ -1,0 +1,11 @@
+url: https://anthonypileggi.github.io/casino
+
+authors:
+  Anthony Pileggi:
+    href: https://blog.sqwerl.life
+
+
+template:
+  params:
+    bootswatch: united
+    ganalytics: UA-114744558-2

@@ -9,6 +9,9 @@ Description: Play casino games in the R console,
   including poker, blackjack, and a slot machine.
   Try to build your fortune before you succomb to the gambler's ruin!
 License: MIT + file LICENSE
+URL: https://anthonypileggi.github.io/casino,
+    https://github.com/anthonypileggi/casino
+BugReports: https://github.com/anthonypileggi/casino/issues
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
