@@ -7,9 +7,9 @@ casino <img src="man/figures/logo.png" align="right" alt="" width="120" />
 >
 > We got everything you want and we know your name
 >
-> We are the people that can find whatever you may need
+> We are a place where you can find whatever you may need
 >
-> And if you got no money, don't worry! You can play for free!
+> And if you got no money, don't worry! You can play for "free"!
 
 Overview
 --------
@@ -33,17 +33,32 @@ Use the `play()` function to start playing immediately. It provides a guided cas
 casino::play()
 ```
 
+Setup (`.casino`)
+-----------------
+
+All players must agree to our policies on recording activity. If you do not agree, you cannot play. House rules!
+
+``` r
+library(casino)
+
+# create a local file for storing persisent player data
+setup()
+#> No records found.
+#> Storing player records at '/Users/anthony/Documents/casino/.casino'
+```
+
+This allows us to store player information persistently between games and R sessions.
+
 Create a Player
 ---------------
 
 You can create a new player manually.
 
 ``` r
-library(casino)
 
 # Create a new player
 Player$new(name = "Player 1")
-#> Reseting profile for Player 1...
+#> You have no money!
 #> Player: 
 #>   Name: Player 1
 #>   Balance:  100
@@ -79,15 +94,10 @@ players()
 #> 2 Player 2 100.000000
 ```
 
-What is the `.casino` file?
----------------------------
-
-A local `.casino` file will be created once you start playing, if it does not already exist. As you play, your profile will be stored in `.casino`. This file keeps track of your current balance and playing history between games and R sessions. Default behavior is to store and look for `.casino` in your working directory.
-
 Play Casino Games
 -----------------
 
-Now it's time to head off to the casino! What should we play first?
+Now it's time to head off to the casino! What do you want to play first?!
 
 ### Poker (5-card stud)
 
@@ -98,8 +108,8 @@ x <- Poker$new(who = "Player 1", type = "stud", bet = 10)
 # play a game
 x$play()
 #> You bet 10; you have 90 left.
-#>  Hand: 5 ♦, J ♠, 8 ♣, 6 ♣, A ♥
-#>  Result: A high
+#>  Hand: 8 ♥, 5 ♦, 3 ♥, 2 ♥, Q ♦
+#>  Result: Q high
 #>    You lost -10!
 #>    Now you have 90 in your account.
 #> Do you want to `play()` again?
@@ -107,8 +117,8 @@ x$play()
 # specify a different bet for this game
 x$play(bet = 5)
 #> You bet 5; you have 85 left.
-#>  Hand: A ♣, 10 ♥, 8 ♠, Q ♣, 3 ♦
-#>  Result: A high
+#>  Hand: 6 ♦, 9 ♦, 4 ♠, J ♦, 4 ♣
+#>  Result: one pair
 #>    You lost -5!
 #>    Now you have 85 in your account.
 #> Do you want to `play()` again?
@@ -123,15 +133,15 @@ x <- Poker$new(who = "Player 1", type = "draw", bet = 20)
 # play a game
 x$play()
 #> You bet 20; you have 65 left.
-#>  Hand: A ♥, 6 ♥, 6 ♠, J ♥, K ♣
+#>  Hand: A ♥, Q ♥, 6 ♥, 8 ♠, Q ♣
 #> Choose cards to `hold()`` and then `draw()`.
 
 x$hold(1, 2, 5)    # hold cards in positions {1, 2, 5}
-#>  Hand: A ♥, 6 ♥, 6 ♠, J ♥, K ♣
+#>  Hand: A ♥, Q ♥, 6 ♥, 8 ♠, Q ♣
 #> Choose cards to `hold()`` and then `draw()`.
 
 x$draw()           # draw new cards for positions {3, 4}
-#>  Hand: A ♥, 6 ♥, K ♣, 5 ♠, K ♥
+#>  Hand: A ♥, Q ♥, Q ♣, 10 ♠, 2 ♣
 #>  Result: one pair (jacks or better)
 #>    You won 0!
 #>    Now you have 85 in your account.
@@ -146,13 +156,17 @@ x <- Blackjack$new(who = "Player 1", bet = 25)
 
 x$play()$stand()
 #> You bet 25; you have 60 left.
-#> Dealer got Blackjack!
-#>  Player Hand: {Q, 7} = 17
-#>  Dealer Hand: {?, A} = ?
-#> Will you `hit()` or `stand()`?
-#> Game over! dealer wins
-#>   You lost -25!
-#>   Now you have 60 in your account.
+#> You got Blackjack!
+#> Game over! player wins
+#>   You won 25!
+#>   Now you have 110 in your account.
+#> Blackjack (w/  1  decks): 
+#> Player: Player 1
+#> Bank: 110
+#> Start a new game with `play()`.
+#> Game over! player wins
+#>   You won 25!
+#>   Now you have 160 in your account.
 ```
 
 ### Slot Machine
@@ -162,22 +176,22 @@ x <- Slots$new(who = "Player 1", bet = 1)
 #> Loading player profile...
 
 x$play()
-#> You bet 1; you have 59 left.
-#>  Reels: * * &
+#> You bet 1; you have 159 left.
+#>  Reels: % & *
 #>    You lost -1!
-#>    Now you have 59 in your account.
+#>    Now you have 159 in your account.
 #> Do you want to `play()` again?
 
 # set the `spins` argument to play > 1 game at a time
 x$play(spins = 2)
-#> You bet 1; you have 58 left.
-#>  Reels: & * *
+#> You bet 1; you have 158 left.
+#>  Reels: ^ ^ ^
+#>    You won 215!
+#>    Now you have 374 in your account.
+#> You bet 1; you have 373 left.
+#>  Reels: * ^ ^
 #>    You lost -1!
-#>    Now you have 58 in your account.
-#> You bet 1; you have 57 left.
-#>  Reels: * * &
-#>    You lost -1!
-#>    Now you have 57 in your account.
+#>    Now you have 373 in your account.
 #> Do you want to `play()` again?
 ```
 
@@ -213,7 +227,10 @@ suppressMessages(x$play(spins = 50))
 Ok, now I lost everything...
 ----------------------------
 
-If you run out of money, the Bank will immediately loan you 100. You're welcome!
+If you run out of money, the Bank will immediately loan you 100.
+
+> You: "So, what's the interest rate on this loan?"
+> Bank: "Oh, don't worry. It's very reasonable..."
 
 Wait, how much did you say I owe?
 ---------------------------------
@@ -223,7 +240,7 @@ Wait, how much did you say I owe?
 player <- x$who
 
 player$debt()
-#> [1] 300
+#> [1] 200
 ```
 
 It's closing time...
@@ -240,16 +257,16 @@ player$summary()
 #> # A tibble: 1 x 4
 #>   games   bet   win   net
 #>   <int> <dbl> <dbl> <dbl>
-#> 1   157   627   484  -143
+#> 1   158   856   753  -103
 
 # By Game
 player$summary(game)  
 #> # A tibble: 3 x 5
 #>   game      games   bet   win   net
 #>   <chr>     <int> <dbl> <dbl> <dbl>
-#> 1 Blackjack    51   275   195   -80
-#> 2 Poker        53   299   103  -196
-#> 3 Slots        53    53   186   133
+#> 1 Blackjack    52   268   258   -10
+#> 2 Poker        53   535   210  -325
+#> 3 Slots        53    53   285   232
 ```
 
 Let's relive the excitement!

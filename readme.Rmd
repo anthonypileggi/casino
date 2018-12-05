@@ -19,13 +19,15 @@ knitr::opts_chunk$set(
 >
 > We got everything you want and we know your name
 >
-> We are the people that can find whatever you may need
+> We are a place where you can find whatever you may need
 >
-> And if you got no money, don't worry!  You can play for free!  
+> And if you got no money, don't worry!  You can play for "free"!  
+
 
 ## Overview
 
 Play casino games in the R console!
+
 
 ## Installation
 
@@ -43,11 +45,25 @@ It provides a guided casino experience.
 casino::play()
 ```
 
+
+## Setup (`.casino`)
+All players must agree to our policies on recording activity.
+If you do not agree, you cannot play.  House rules!
+
+```{r}
+library(casino)
+
+# create a local file for storing persisent player data
+setup()
+```
+
+This allows us to store player information persistently between games and R sessions.
+
+
 ## Create a Player
 You can create a new player manually.
 
 ```{r}
-library(casino)
 
 # Create a new player
 Player$new(name = "Player 1")
@@ -67,18 +83,10 @@ players()
 ```
 
 
-## What is the `.casino` file?
-
-A local `.casino` file will be created once you start playing, if it does not already exist.
-As you play, your profile will be stored in `.casino`.
-This file keeps track of your current balance and playing history between games and R sessions.
-Default behavior is to store and look for `.casino` in your working directory.
-
-
 ## Play Casino Games
 
 Now it's time to head off to the casino!
-What should we play first?
+What do you want to play first?!
 
 
 ### Poker (5-card stud)
@@ -150,7 +158,10 @@ suppressMessages(x$play(spins = 50))
 
 ## Ok, now I lost everything...
 
-If you run out of money, the Bank will immediately loan you 100.  You're welcome!
+If you run out of money, the Bank will immediately loan you 100.
+
+> You: "So, what's the interest rate on this loan?"  
+> Bank: "Oh, don't worry.  It's very reasonable..."
 
 
 ## Wait, how much did you say I owe?
