@@ -17,6 +17,7 @@ Imports:
     dplyr,
     tibble,
     tidyr,
+    purrr,
     crayon,
     R6,
     ggplot2,
