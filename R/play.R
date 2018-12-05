@@ -27,7 +27,6 @@ play <- function(name = "Player 1") {
     } else {
       message("Invalid selection!  Please choose from options [1-4].")
     }
-    #again <- readline(prompt = "Do you want to play another game?\n\t1. Yes\n\t2. No  ")
   }
 
   return("Thanks for playing!")

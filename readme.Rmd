@@ -177,7 +177,7 @@ player$summary()
 player$summary(game)  
 ```
 
-And don't worry if your memory is failing you, because we record everything...
+Let's relive the excitement!
 ```{r plot-history, fig.height = 4, fig.width = 8}
 player$plot()
 ```
