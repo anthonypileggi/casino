@@ -10,10 +10,11 @@ Player <- R6::R6Class("Player",
     name = NULL,
 
     # -- create/load player profile (via local '.casino' file)
-    initialize = function(name = "Joe Player") {
+    initialize = function(name = NA) {
+      if (is.na(name))
+        stop("You must choose a name for your player!")
       self$name <- name
       private$recover()                # check for (and load) existing player history, or create a new profile
-      #private$update()                 # add/update data in '.casino'
     },
 
     # -- print method (player info)
@@ -38,9 +39,9 @@ Player <- R6::R6Class("Player",
 
     # -- reset player profile
     reset = function(keep_history = FALSE) {
-      message("Reseting profile for ", self$name, "...\n", sep = "")
       private$.balance <- 0
       if (!keep_history) {
+        message("Reseting profile for ", self$name, "...\n", sep = "")
         private$.history <- private$.history[-(1:nrow(private$.history)), ]
         private$.level <- 1
       }
@@ -163,29 +164,18 @@ Player <- R6::R6Class("Player",
 
     # load an existing '.casino' file with all player histories
     load = function() {
-      switch(file.exists(".casino") + 1, NULL, readRDS(".casino"))
+      file <- Sys.getenv("CASINO_FILE")
+      if (!file.exists(file))
+        stop("No '.casino' file was found.  Run `setup()` to create one.")
+      readRDS(file)
+      #switch(file.exists(file) + 1, NULL, readRDS(file))
+      #switch(file.exists(".casino") + 1, NULL, readRDS(".casino"))
     },
 
     # save a list of players in '.casino'
     save = function(players) {
-      saveRDS(players, ".casino")
-    },
-
-    # load past info for the player
-    recover = function() {
-      p <- private$load()
-      if (!is.null(p)) {
-        id <- which(purrr::map_chr(p, "name") == self$name)
-        if (length(id) == 1) {
-          message("Loading player profile...\n")
-          private$.balance <- p[[id]]$balance
-          private$.level <- p[[id]]$level
-          private$.history <- p[[id]]$history
-        }
-      } else {
-        self$reset()
-      }
-      private$check_balance()
+      saveRDS(players, Sys.getenv("CASINO_FILE"))
+      #saveRDS(players, ".casino")
     },
 
     # delete a player profile
@@ -209,6 +199,21 @@ Player <- R6::R6Class("Player",
     update = function() {
       private$delete()
       private$add()
+    },
+
+    # load past info for the player
+    recover = function() {
+      p <- private$load()
+      if (!is.null(p)) {
+        id <- which(purrr::map_chr(p, "name") == self$name)
+        if (length(id) == 1) {
+          message("Loading player profile...\n")
+          private$.balance <- p[[id]]$balance
+          private$.level <- p[[id]]$level
+          private$.history <- p[[id]]$history
+        }
+      }
+      private$check_balance()    # if no player was found, this will create a new one
     }
 
   )
