@@ -4,7 +4,10 @@
 \alias{players}
 \title{List all player profiles}
 \usage{
-players(file = ".casino")
+players(file = Sys.getenv("CASINO_FILE"))
+}
+\arguments{
+\item{file}{full path to file containing player profiles}
 }
 \description{
 List all player profiles
