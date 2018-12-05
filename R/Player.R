@@ -168,14 +168,11 @@ Player <- R6::R6Class("Player",
       if (!file.exists(file))
         stop("No '.casino' file was found.  Run `setup()` to create one.")
       readRDS(file)
-      #switch(file.exists(file) + 1, NULL, readRDS(file))
-      #switch(file.exists(".casino") + 1, NULL, readRDS(".casino"))
     },
 
     # save a list of players in '.casino'
     save = function(players) {
       saveRDS(players, Sys.getenv("CASINO_FILE"))
-      #saveRDS(players, ".casino")
     },
 
     # delete a player profile
