@@ -24,196 +24,239 @@ Installation
 devtools::install_github("anthonypileggi/casino")
 ```
 
-Getting Started
+Quick Start
+-----------
+
+Use the `play()` function to start playing immediately. It provides a guided casino experience.
+
+``` r
+casino::play()
+```
+
+Create a Player
 ---------------
 
-### Create a Player
-
-Start off by creating your player.
+You can create a new player manually.
 
 ``` r
 library(casino)
 
 # Create a new player
-player <- Player$new(name = "Anthony", amount = 100)
-player
+Player$new(name = "Player 1")
+#> Reseting profile for Player 1...
 #> Player: 
-#>   Name: Anthony
-#>   Amount:  100
-#>   Level:  1
-#>   Played:
+#>   Name: Player 1
+#>   Balance:  100
+#>   Level:  0
+#>   Played:  1
+#>   Debt:  100
+
+# View all available player profiles
+players()
+#> # A tibble: 1 x 2
+#>   name     balance   
+#>   <chr>    <chr>     
+#> 1 Player 1 100.000000
 ```
 
-Then it's time to head off to the casino! What should we play first?
+Or just start playing, and one will automatically be created for you.
+
+``` r
+# Start a new game (this will auto-create a player)
+Blackjack$new(who = "Player 2")
+#> You have no money!
+#> Blackjack (w/  1  decks): 
+#> Player: Player 2
+#> Bank: 100
+#> Start a new game with `play()`.
+
+# View all available player profiles (again)
+players()
+#> # A tibble: 2 x 2
+#>   name     balance   
+#>   <chr>    <chr>     
+#> 1 Player 1 100.000000
+#> 2 Player 2 100.000000
+```
+
+What is the `.casino` file?
+---------------------------
+
+A local `.casino` file will be created once you start playing, if it does not already exist. As you play, your profile will be stored in `.casino`. This file keeps track of your current balance and playing history between games and R sessions. Default behavior is to store and look for `.casino` in your working directory.
+
+Play Casino Games
+-----------------
+
+Now it's time to head off to the casino! What should we play first?
 
 ### Poker (5-card stud)
 
 ``` r
-x <- Poker$new(who = player, type = "stud")
-x$play(bet = 5)
-#> You bet 5; you have 95 left.
-#>  Hand: 4 ♣, J ♦, 8 ♦, 4 ♦, 8 ♠
-#>  Result: two pair
-#>    You won 20!
-#>    Now you have 120 in your account.
-#> Do you want to `play()` again?
-x$play(bet = 10)
-#> You bet 10; you have 110 left.
-#>  Hand: Q ♣, 7 ♥, K ♣, 10 ♠, A ♥
-#>  Result: A high
+x <- Poker$new(who = "Player 1", type = "stud", bet = 10)
+#> Loading player profile...
+
+# play a game
+x$play()
+#> You bet 10; you have 90 left.
+#>  Hand: K ♣, 10 ♠, 10 ♣, 3 ♥, 6 ♦
+#>  Result: one pair
 #>    You lost -10!
-#>    Now you have 110 in your account.
+#>    Now you have 90 in your account.
 #> Do you want to `play()` again?
-x$play(bet = 15)
-#> You bet 15; you have 95 left.
-#>  Hand: 9 ♥, 6 ♥, 10 ♥, 5 ♠, K ♦
-#>  Result: K high
-#>    You lost -15!
-#>    Now you have 95 in your account.
+
+# specify a different bet for this game
+x$play(bet = 5)
+#> You bet 5; you have 85 left.
+#>  Hand: A ♠, 8 ♣, 8 ♦, 4 ♦, 10 ♥
+#>  Result: one pair
+#>    You lost -5!
+#>    Now you have 85 in your account.
 #> Do you want to `play()` again?
-player <- x$cash_out()     # leave the table
 ```
 
 ### Poker (5-card draw)
 
 ``` r
-x <- Poker$new(who = player, type = "draw")
-x$play(bet = 15)
-#> You bet 15; you have 80 left.
-#>  Hand: 4 ♥, 7 ♥, A ♠, 8 ♠, 4 ♦
+x <- Poker$new(who = "Player 1", type = "draw", bet = 20)
+#> Loading player profile...
+
+# play a game
+x$play()
+#> You bet 20; you have 65 left.
+#>  Hand: 3 ♥, 3 ♠, 10 ♦, Q ♠, K ♣
 #> Choose cards to `hold()`` and then `draw()`.
-x$hold(1, 2, 5)
-#>  Hand: 4 ♥, 7 ♥, A ♠, 8 ♠, 4 ♦
+
+x$hold(1, 2, 5)    # hold cards in positions {1, 2, 5}
+#>  Hand: 3 ♥, 3 ♠, 10 ♦, Q ♠, K ♣
 #> Choose cards to `hold()`` and then `draw()`.
-x$draw()
-#>  Hand: 4 ♥, 7 ♥, 4 ♦, 7 ♣, 4 ♣
-#>  Result: 3-of-a-kind
-#>    You won 210!
-#>    Now you have 305 in your account.
+
+x$draw()           # draw new cards for positions {3, 4}
+#>  Hand: 3 ♥, 3 ♠, K ♣, 9 ♦, 5 ♣
+#>  Result: one pair
+#>    You lost -20!
+#>    Now you have 65 in your account.
 #> Do you want to `play()` again?
-player <- x$cash_out()     # leave the table
 ```
 
 ### Blackjack
 
 ``` r
-x <- Blackjack$new(who = player)
-for (i in 1:5)
-  x$play(bet = 5)$stand()
-#> You bet 5; you have 300 left.
-#> Blackjack (w/  1  decks): 
-#>   Player: Anthony
-#>   Bet: 5
-#>  Player Hand: {10, 8} = 18
-#>  Dealer Hand: {A, Q} = 21
+x <- Blackjack$new(who = "Player 1", bet = 25)
+#> Loading player profile...
+
+x$play()$stand()
+#> You bet 25; you have 40 left.
+#>  Player Hand: {10, 6} = 16
+#>  Dealer Hand: {?, 7} = ?
 #> Will you `hit()` or `stand()`?
-#> # A tibble: 1 x 6
-#>   player dealer outcome       bet   win   net
-#>    <dbl>  <dbl> <chr>       <dbl> <dbl> <dbl>
-#> 1     18     21 dealer wins     5     0    -5
-#> You bet 5; you have 295 left.
-#> Blackjack (w/  1  decks): 
-#>   Player: Anthony
-#>   Bet: 5
-#>  Player Hand: {7, 8} = 15
-#>  Dealer Hand: {K, 2} = 12
-#> Will you `hit()` or `stand()`?
-#> # A tibble: 1 x 6
-#>   player dealer outcome       bet   win   net
-#>    <dbl>  <dbl> <chr>       <dbl> <dbl> <dbl>
-#> 1     15     22 dealer bust     5    10     5
-#> You bet 5; you have 300 left.
-#> Blackjack (w/  1  decks): 
-#>   Player: Anthony
-#>   Bet: 5
-#>  Player Hand: {Q, 6} = 16
-#>  Dealer Hand: {6, 10} = 16
-#> Will you `hit()` or `stand()`?
-#> # A tibble: 1 x 6
-#>   player dealer outcome       bet   win   net
-#>    <dbl>  <dbl> <chr>       <dbl> <dbl> <dbl>
-#> 1     16     25 dealer bust     5    10     5
-#> You bet 5; you have 305 left.
-#> Blackjack (w/  1  decks): 
-#>   Player: Anthony
-#>   Bet: 5
-#>  Player Hand: {J, 3} = 13
-#>  Dealer Hand: {9, J} = 19
-#> Will you `hit()` or `stand()`?
-#> # A tibble: 1 x 6
-#>   player dealer outcome       bet   win   net
-#>    <dbl>  <dbl> <chr>       <dbl> <dbl> <dbl>
-#> 1     13     19 dealer wins     5     0    -5
-#> You bet 5; you have 300 left.
-#> Blackjack (w/  1  decks): 
-#>   Player: Anthony
-#>   Bet: 5
-#>  Player Hand: {6, 3} = 9
-#>  Dealer Hand: {9, 5} = 14
-#> Will you `hit()` or `stand()`?
-#> # A tibble: 1 x 6
-#>   player dealer outcome       bet   win   net
-#>    <dbl>  <dbl> <chr>       <dbl> <dbl> <dbl>
-#> 1      9     20 dealer wins     5     0    -5
-player <- x$cash_out()
+#> Game over! dealer wins
+#>   You lost -25!
+#>   Now you have 40 in your account.
 ```
 
 ### Slot Machine
 
 ``` r
-x <- Slots$new(who = player, bet = 1)
+x <- Slots$new(who = "Player 1", bet = 1)
+#> Loading player profile...
+
 x$play()
-#> You bet 1; you have 299 left.
-#>  Reels: * * ^
+#> You bet 1; you have 39 left.
+#>  Reels: * % *
 #>    You lost -1!
-#>    Now you have 299 in your account.
+#>    Now you have 39 in your account.
 #> Do you want to `play()` again?
 
-# Let's just go for it...
-x$play(spins = 5)
-#> You bet 1; you have 298 left.
-#>  Reels: * * #
+# set the `spins` argument to play > 1 game at a time
+x$play(spins = 2)
+#> You bet 1; you have 38 left.
+#>  Reels: * & %
 #>    You lost -1!
-#>    Now you have 298 in your account.
-#> You bet 1; you have 297 left.
-#>  Reels: * ^ ^
+#>    Now you have 38 in your account.
+#> You bet 1; you have 37 left.
+#>  Reels: * ^ *
 #>    You lost -1!
-#>    Now you have 297 in your account.
-#> You bet 1; you have 296 left.
-#>  Reels: ^ # &
-#>    You lost -1!
-#>    Now you have 296 in your account.
-#> You bet 1; you have 295 left.
-#>  Reels: * * %
-#>    You lost -1!
-#>    Now you have 295 in your account.
-#> You bet 1; you have 294 left.
-#>  Reels: * ^ &
-#>    You lost -1!
-#>    Now you have 294 in your account.
+#>    Now you have 37 in your account.
 #> Do you want to `play()` again?
 ```
 
-### Cashing out
+I think I have a gambling problem
+---------------------------------
 
-What a fun day at the casino! Or, was it? Let's see how we did...
+If you want to play a lot of games, you can write a script.
+Just make sure to silence the output (`verbose = FALSE`) and sounds (`sound = FALSE`).
 
 ``` r
+# poker (stud)
+x <- Poker$new(who = "Player 1", type = "stud", bet = 10, verbose = FALSE, sound = FALSE)
+#> Loading player profile...
+for (i in 1:50) 
+  suppressMessages(x$play())
+
+# blackjack (blind)
+x <- Blackjack$new(who = "Player 1", bet = 5, verbose = FALSE, sound = FALSE)
+#> Loading player profile...
+for (i in 1:50) {
+  suppressMessages(x$play())
+  if (x$active)
+    x$stand()
+}
+
+# penny slots
+x <- Slots$new(who = "Player 1", bet = 1, verbose = FALSE, sound = FALSE)
+#> Loading player profile...
+suppressMessages(x$play(spins = 50))
+#> Do you want to `play()` again?
+```
+
+Ok, now I lost everything...
+----------------------------
+
+If you run out of money, the Bank will immediately loan you 100. You're welcome!
+
+Wait, how much did you say I owe?
+---------------------------------
+
+``` r
+# player profile is stored in `$who` of a game object
+player <- x$who
+
+player$debt()
+#> [1] 300
+```
+
+It's closing time...
+--------------------
+
+What a fun day at the casino! Or, was it?
+
+``` r
+# player profile is stored in `$who` of a game object
+player <- x$who
+
 # Overall
-player$summarize_history()
+player$summary()
 #> # A tibble: 1 x 4
 #>   games   bet   win   net
 #>   <int> <dbl> <dbl> <dbl>
-#> 1    15    76   270   194
+#> 1   157   719   507  -212
 
 # By Game
-player$summarize_history(game)  
+player$summary(game)  
 #> # A tibble: 3 x 5
 #>   game      games   bet   win   net
 #>   <chr>     <int> <dbl> <dbl> <dbl>
-#> 1 Blackjack     5    25    20    -5
-#> 2 Poker         4    45   250   205
-#> 3 Slots         6     6     0    -6
+#> 1 Blackjack    51   275   175  -100
+#> 2 Poker        53   391   215  -176
+#> 3 Slots        53    53   117    64
 ```
 
-Well I guess you'll be back tomorrow. See you then!
+And don't worry if your memory is failing you, because we record everything...
+
+``` r
+player$plot()
+```
+
+![](man/figures/plot-history-1.png)
+
+Well, I guess we'll you'll be back tomorrow. See you then!

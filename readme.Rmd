@@ -34,67 +34,152 @@ Play casino games in the R console!
 devtools::install_github("anthonypileggi/casino")
 ```
 
-## Getting Started
+## Quick Start
 
-### Create a Player
-Start off by creating your player.
+Use the `play()` function to start playing immediately.
+It provides a guided casino experience.
+
+```{r, eval = FALSE}
+casino::play()
+```
+
+## Create a Player
+You can create a new player manually.
 
 ```{r}
 library(casino)
 
 # Create a new player
-player <- Player$new(name = "Anthony", amount = 100)
-player
+Player$new(name = "Player 1")
+
+# View all available player profiles
+players()
 ```
 
-Then it's time to head off to the casino!
+Or just start playing, and one will automatically be created for you.
+
+```{r}
+# Start a new game (this will auto-create a player)
+Blackjack$new(who = "Player 2")
+
+# View all available player profiles (again)
+players()
+```
+
+
+## What is the `.casino` file?
+
+A local `.casino` file will be created once you start playing, if it does not already exist.
+As you play, your profile will be stored in `.casino`.
+This file keeps track of your current balance and playing history between games and R sessions.
+Default behavior is to store and look for `.casino` in your working directory.
+
+
+## Play Casino Games
+
+Now it's time to head off to the casino!
 What should we play first?
+
 
 ### Poker (5-card stud)
 ```{r}
-x <- Poker$new(who = player, type = "stud")
+x <- Poker$new(who = "Player 1", type = "stud", bet = 10)
+
+# play a game
+x$play()
+
+# specify a different bet for this game
 x$play(bet = 5)
-x$play(bet = 10)
-x$play(bet = 15)
-player <- x$cash_out()     # leave the table
 ```
+
 
 ### Poker (5-card draw)
 ```{r}
-x <- Poker$new(who = player, type = "draw")
-x$play(bet = 15)
-x$hold(1, 2, 5)
-x$draw()
-player <- x$cash_out()     # leave the table
+x <- Poker$new(who = "Player 1", type = "draw", bet = 20)
+
+# play a game
+x$play()
+
+x$hold(1, 2, 5)    # hold cards in positions {1, 2, 5}
+
+x$draw()           # draw new cards for positions {3, 4}
 ```
 
 ### Blackjack
 ```{r}
-x <- Blackjack$new(who = player)
-for (i in 1:5)
-  x$play(bet = 5)$stand()
-player <- x$cash_out()
+x <- Blackjack$new(who = "Player 1", bet = 25)
+
+x$play()$stand()
 ```
 
 ### Slot Machine
 ```{r}
-x <- Slots$new(who = player, bet = 1)
+x <- Slots$new(who = "Player 1", bet = 1)
+
 x$play()
 
-# Let's just go for it...
-x$play(spins = 5)
+# set the `spins` argument to play > 1 game at a time
+x$play(spins = 2)
 ```
 
-### Cashing out
+
+## I think I have a gambling problem
+
+If you want to play a lot of games, you can write a script.  
+Just make sure to silence the output (`verbose = FALSE`) and sounds (`sound = FALSE`).
+
+```{r, messages = FALSE}
+# poker (stud)
+x <- Poker$new(who = "Player 1", type = "stud", bet = 10, verbose = FALSE, sound = FALSE)
+for (i in 1:50) 
+  suppressMessages(x$play())
+
+# blackjack (blind)
+x <- Blackjack$new(who = "Player 1", bet = 5, verbose = FALSE, sound = FALSE)
+for (i in 1:50) {
+  suppressMessages(x$play())
+  if (x$active)
+    x$stand()
+}
+
+# penny slots
+x <- Slots$new(who = "Player 1", bet = 1, verbose = FALSE, sound = FALSE)
+suppressMessages(x$play(spins = 50))
+```
+
+
+## Ok, now I lost everything...
+
+If you run out of money, the Bank will immediately loan you 100.  You're welcome!
+
+
+## Wait, how much did you say I owe?
+
+```{r}
+# player profile is stored in `$who` of a game object
+player <- x$who
+
+player$debt()
+```
+
+
+## It's closing time...
 
 What a fun day at the casino!  Or, was it?
-Let's see how we did...
 ```{r}
+# player profile is stored in `$who` of a game object
+player <- x$who
+
 # Overall
-player$summarize_history()
+player$summary()
 
 # By Game
-player$summarize_history(game)  
+player$summary(game)  
 ```
 
-Well I guess you'll be back tomorrow.  See you then!
+And don't worry if your memory is failing you, because we record everything...
+```{r plot-history, fig.height = 4, fig.width = 8}
+player$plot()
+```
+
+Well, I guess we'll you'll be back tomorrow.  See you then!
