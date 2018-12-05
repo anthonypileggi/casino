@@ -9,6 +9,9 @@ Blackjack <- R6::R6Class("Blackjack",
     bet = NULL,
     who = NULL,
 
+    verbose = NULL,
+    sound = NULL,
+
     # TODO: make the 'dealer' object private (so player cannot see the first card!!)
     player = NULL,
     dealer = NULL,
@@ -16,12 +19,13 @@ Blackjack <- R6::R6Class("Blackjack",
     active = FALSE,
 
     # setup blackjack table
-    initialize = function(decks = 1, who = NA, bet = 10) {
+    initialize = function(who = NA, decks = 1,  bet = 10, verbose = TRUE, sound = TRUE) {
       self$decks <- decks
       private$deck <- Deck$new(decks)
       self$who <- Player$new(who)
       self$bet <- bet
-      print(self)
+      self$verbose <- verbose
+      self$sound <- sound
     },
 
     # print method
@@ -44,8 +48,9 @@ Blackjack <- R6::R6Class("Blackjack",
 
     # -- start a new game
     play = function(bet = self$bet) {
-      self$bet <- bet
-      self$who$bet(bet)
+      if (self$active)
+        stop("You already started a game!")
+      self$bet <- self$who$bet(bet)
       self$player <- self$dealer <- NULL
       if (private$deck$cards_left() < 15)
         private$deck$shuffle()
@@ -55,7 +60,8 @@ Blackjack <- R6::R6Class("Blackjack",
       }
       self$active <- TRUE
       private$check_scores()    # check if anyone has 21 yet
-      print(self)
+      if (self$verbose)
+        print(self)
       invisible(self)
     },
 
@@ -64,7 +70,8 @@ Blackjack <- R6::R6Class("Blackjack",
       if (self$active)
         private$deal("player")
       private$check_scores()
-      #print(self)
+      if (self$verbose)
+        print(self)
       invisible(self)
     },
 
@@ -96,6 +103,13 @@ Blackjack <- R6::R6Class("Blackjack",
       result <- private$score()
       self$who$record(game = "Blackjack", outcome = result$outcome, bet = result$bet, win = result$win, net = result$net)
       self$active <- FALSE
+      if (self$sound && result$win > 0)
+        beepr::beep("fanfare")
+      if (self$verbose) {
+        cat("Game over! ", result$outcome, "\n", sep = "")
+        cat("  You ", ifelse(result$net >= 0, "won", "lost"), " ", result$net, "!\n", sep = "")
+        cat("  Now you have ", self$who$balance, " in your account.\n", sep = "")
+      }
     },
 
     # -- finish the dealers turn
