@@ -6,6 +6,9 @@
 \usage{
 play_blackjack(name)
 }
+\arguments{
+\item{name}{player name}
+}
 \description{
 Play blackjack
 }

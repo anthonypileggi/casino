@@ -1,7 +1,7 @@
 
 #' Play in the casino
 #' @export
-play <- function(name = "Player 1") {
+play <- function() {
 
   # Create/Load player profile
   name <- readline(prompt = "Enter your name: ")
@@ -32,7 +32,10 @@ play <- function(name = "Player 1") {
   return("Thanks for playing!")
 }
 
+
 #' Play poker
+#' @param name player name
+#' @param type game type ('draw' or 'stud')
 play_poker <- function(name, type) {
   g <- Poker$new(who = name, type = type)
   keep_playing <- ""
@@ -51,6 +54,7 @@ play_poker <- function(name, type) {
 }
 
 #' Play blackjack
+#' @param name player name
 play_blackjack <- function(name) {
   g <- Blackjack$new(who = name)
   keep_playing <- ""
@@ -68,6 +72,7 @@ play_blackjack <- function(name) {
 }
 
 #' Play the slot machine
+#' @param name player name
 play_slots <- function(name) {
   g <- Slots$new(who = name)
   keep_playing <- ""

@@ -6,6 +6,9 @@
 \usage{
 play_slots(name)
 }
+\arguments{
+\item{name}{player name}
+}
 \description{
 Play the slot machine
 }

@@ -4,7 +4,7 @@
 \alias{play}
 \title{Play in the casino}
 \usage{
-play(name = "Player 1")
+play()
 }
 \description{
 Play in the casino

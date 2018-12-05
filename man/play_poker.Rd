@@ -6,6 +6,11 @@
 \usage{
 play_poker(name, type)
 }
+\arguments{
+\item{name}{player name}
+
+\item{type}{game type ('draw' or 'stud')}
+}
 \description{
 Play poker
 }
