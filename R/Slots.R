@@ -10,10 +10,15 @@ Slots <- R6::R6Class("Slots",
     reels = NULL,
     turn = NULL,
 
+    verbose = NULL,
+    sound = NULL,
+
     # -- setup machine
-    initialize = function(who = NA, bet = 10) {
+    initialize = function(who = NA, bet = 10, verbose = TRUE, sound = TRUE) {
       self$who <- Player$new(who)
       self$bet <- bet
+      self$verbose <- verbose
+      self$sound <- sound
       private$make_reel()
     },
 
@@ -45,9 +50,8 @@ Slots <- R6::R6Class("Slots",
 
     # -- gameplay
     play = function(bet = self$bet, spins = 1) {
-      self$bet <- bet
       for (i in 1:spins) {
-        self$who$bet(bet)
+        self$bet <- self$who$bet(bet)
         private$spin()
         private$end_game()
       }
@@ -109,7 +113,10 @@ Slots <- R6::R6Class("Slots",
       score <- private$score()
       self$who$record(game = "Slots", outcome = score$outcome, bet = score$bet, win = score$win, net = score$net)
       self$turn <- 1
-      print(self)
+      if (self$sound && score$win > 0)
+        beepr::beep("fanfare")
+      if (self$verbose)
+        print(self)
     }
 
   )
