@@ -59,7 +59,6 @@ Deck <- R6::R6Class("Deck",
         tidyr::crossing(
           value = c(2:10, "J", "Q", "K", "A"),
           #suit = c("heart", "diamond", "spade", "club")
-          #suit = c("♥", "♦", "♠",  "♣")
           suit = c("\u2665", "\u2666", "\u2660", "\u2663")
         )
       self$deck <- purrr::map_df(1:self$decks, ~deck)
