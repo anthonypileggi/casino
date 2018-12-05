@@ -18,4 +18,6 @@ Imports:
     tibble,
     tidyr,
     crayon,
-    R6
+    R6,
+    ggplot2,
+    beepr
