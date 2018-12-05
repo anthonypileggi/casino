@@ -1,5 +1,6 @@
 #' Player R6 Class
 #' @importFrom magrittr "%>%"
+#' @import ggplot2
 #' @export
 Player <- R6::R6Class("Player",
 
@@ -11,10 +12,8 @@ Player <- R6::R6Class("Player",
     # -- create/load player profile (via local '.casino' file)
     initialize = function(name = "Joe Player") {
       self$name <- name
-      private$recover()                # check for (and load) existing player history
-      if (private$.balance == 0)       # if player has 0 balance, reset them!
-        self$reset()
-      private$update()                 # add/update data in '.casino'
+      private$recover()                # check for (and load) existing player history, or create a new profile
+      #private$update()                 # add/update data in '.casino'
     },
 
     # -- print method (player info)
@@ -24,6 +23,7 @@ Player <- R6::R6Class("Player",
       cat("  Balance:  ", private$.balance, "\n", sep = "")
       cat("  Level:  ", private$.level, "\n", sep = "")
       cat("  Played:  ", nrow(private$.history), "\n", sep = "")
+      cat("  Debt:  ", self$debt(), "\n", sep = "")
       invisible(self)
     },
 
@@ -37,47 +37,54 @@ Player <- R6::R6Class("Player",
     },
 
     # -- reset player profile
-    reset = function() {
+    reset = function(keep_history = FALSE) {
       message("Reseting profile for ", self$name, "...\n", sep = "")
-      private$.balance <- 100
-      private$.level <- 1
-      private$.history <- private$.history[-(1:nrow(private$.history)), ]
+      private$.balance <- 0
+      if (!keep_history) {
+        private$.history <- private$.history[-(1:nrow(private$.history)), ]
+        private$.level <- 1
+      }
+      private$add_funds(100)
       private$update()
       invisible(self)
     },
 
     # -- place a bet
     bet = function(amount) {
-      # reset balance if currently at 0
+      # loan funds if balance is currently at 0
       if (private$.balance == 0)
-        self$reset()
-
-      # don't bet more than you have
+        private$add_funds(100)
       if (amount > private$.balance) {
         message(paste0("You cannot bet ", amount, "; you only have ", private$.balance, "!"))
         amount <- private$.balance
       }
-
       if (amount > 0) {
         private$.balance <- private$.balance - amount
         message(paste0("You bet ", amount, "; you have ", private$.balance, " left."))
         private$update()
       }
+      invisible(amount)
     },
 
     # -- record the outcome of a single game played; update 'amount' in account
     record = function(game, outcome, bet, win, net) {
-      new_game <- tibble::tibble(game = game, outcome = outcome, bet = bet, win = win, net = net)
+      new_game <- tibble::tibble(date = Sys.time(), game = game, outcome = outcome, bet = bet, win = win, net = net)
       private$.history <- dplyr::bind_rows(private$.history, new_game)
       private$.balance <- private$.balance + win
       private$set_level()
       private$update()
     },
 
+    # -- total bank debt
+    debt = function() {
+      sum(private$.history$win[private$.history$game == "Bank"])
+    },
+
     # -- summarize player gameplay history
     summary = function(...) {
       groups <- rlang::quos(...)
       private$.history %>%
+        dplyr::filter(game != "Bank") %>%
         dplyr::group_by(!!!groups) %>%
         dplyr::summarize(
           games = dplyr::n(),
@@ -85,6 +92,18 @@ Player <- R6::R6Class("Player",
           win = sum(win),
           net = sum(net)
         )
+    },
+
+    # -- plot player history
+    plot = function() {
+      private$.history %>%
+        dplyr::mutate(balance = cumsum(net)) %>%
+        ggplot(aes(x = date, y = balance)) +
+        geom_step() +
+        geom_point(aes(color = game)) +
+        geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+        labs(x = "Date", y = "Balance", color = NULL) +
+        theme_bw()
     }
   ),
 
@@ -107,7 +126,7 @@ Player <- R6::R6Class("Player",
     },
     history = function(value) {
       if (missing(value)) {
-        private$.history
+        dplyr::mutate(private$.history, balance = cumsum(net))
       } else {
         cat(crayon::red("Nice try Marty McFly, but you cannot change the past!\n"))
         #stop("Are you Marty McFly?!  You cannot change the past.", call. = FALSE)
@@ -118,23 +137,28 @@ Player <- R6::R6Class("Player",
   private = list(
 
     # everyone starts with a Level 1 w/ a balance of 100
-    .balance = 100,
+    .balance = 0,
     .level = 1,
-    .history = tibble::tibble(game = character(), outcome = character(), bet = numeric(), win = numeric(), net = numeric()),
+    .history = tibble::tibble(date = Sys.time()[-1], game = character(), outcome = character(), bet = numeric(), win = numeric(), net = numeric()),
 
     # level progression
-    levels = tibble::tibble(level = 1:99, threshold = 2 ^ level),
+    levels = tibble::tibble(level = 0:99, threshold = (2 ^ level) - 1),
     set_level = function() {
-      gains <- sum(private$.history$win, na.rm = TRUE)
-      private$.level <- tail(filter(private$levels, threshold <= gains)$level, 1)
+      gains <- sum(private$.history$win[private$.history$game != "Bank"], na.rm = TRUE)
+      private$.level <- tail(dplyr::filter(private$levels, threshold <= gains)$level, 1)
     },
 
-    # check balance
+    # check balance; reload if empty
     check_balance = function() {
       if (private$.balance == 0) {     # if player has 0 balance
         message("You have no money!")
-        self$reset()
+        private$add_funds(100)
       }
+    },
+
+    # add funds to a player's balance
+    add_funds = function(value) {
+      self$record(game = "Bank", outcome = "Loan", bet = 0, win = value, net = value)
     },
 
     # load an existing '.casino' file with all player histories
@@ -158,6 +182,8 @@ Player <- R6::R6Class("Player",
           private$.level <- p[[id]]$level
           private$.history <- p[[id]]$history
         }
+      } else {
+        self$reset()
       }
       private$check_balance()
     },
