@@ -1,6 +1,11 @@
 #' Player R6 Class
 #' @importFrom magrittr "%>%"
 #' @import ggplot2
+#' @examples
+#' setup("my_profile")
+#' Player$new("Player 1")
+#' Player$new("Player 2")
+#' delete()
 #' @export
 Player <- R6::R6Class("Player",
 
