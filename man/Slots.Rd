@@ -11,4 +11,20 @@ Slots
 \description{
 Slots R6 Class
 }
+\examples{
+set.seed(101315)
+setup()
+
+# start the slot machine
+x <- Slots$new(who = "Player 1", bet = 10)
+
+# play 1 game
+x$play()
+
+# play >1 game at a time
+x$play(spins = 3)
+
+# clean-up
+delete()
+}
 \keyword{datasets}

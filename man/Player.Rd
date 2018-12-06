@@ -11,4 +11,10 @@ Player
 \description{
 Player R6 Class
 }
+\examples{
+setup("my_profile")
+Player$new("Player 1")
+Player$new("Player 2")
+delete()
+}
 \keyword{datasets}
