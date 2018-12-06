@@ -138,7 +138,7 @@ Poker <- R6::R6Class("Poker",
       score <- self$score()
       self$who$record(game = "Poker", outcome = score$outcome, bet = score$bet, win = score$win, net = score$net)
       if (self$sound && score$win > 0)
-        beepr::beep("fanfare")
+        play_sound()
       if (self$verbose)
         print(self)
       self$turn <- 0

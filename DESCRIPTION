@@ -23,9 +23,9 @@ Imports:
     purrr,
     crayon,
     R6,
-    ggplot2,
-    beepr
+    ggplot2
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    beepr
 VignetteBuilder: knitr

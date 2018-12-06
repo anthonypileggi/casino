@@ -129,7 +129,7 @@ Slots <- R6::R6Class("Slots",
       self$who$record(game = "Slots", outcome = score$outcome, bet = score$bet, win = score$win, net = score$net)
       self$turn <- 1
       if (self$sound && score$win > 0)
-        beepr::beep("fanfare")
+        play_sound()
       if (self$verbose)
         print(self)
     }

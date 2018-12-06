@@ -123,7 +123,7 @@ Blackjack <- R6::R6Class("Blackjack",
       self$who$record(game = "Blackjack", outcome = result$outcome, bet = result$bet, win = result$win, net = result$net)
       self$active <- FALSE
       if (self$sound && result$win > 0)
-        beepr::beep("fanfare")
+        play_sound()
       if (self$verbose) {
         cat("Game over! ", result$outcome, "\n", sep = "")
         cat("  You ", ifelse(result$net >= 0, "won", "lost"), " ", result$net, "!\n", sep = "")
