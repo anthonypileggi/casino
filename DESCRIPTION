@@ -15,7 +15,7 @@ BugReports: https://github.com/anthonypileggi/casino/issues
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-Imports: 
+Imports:
     magrittr,
     dplyr,
     tibble,
@@ -23,7 +23,8 @@ Imports:
     purrr,
     crayon,
     R6,
-    ggplot2
+    ggplot2,
+    utils
 Suggests: 
     knitr,
     rmarkdown,
