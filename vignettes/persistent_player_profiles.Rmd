@@ -1,5 +1,5 @@
 ---
-title: "Persisent Player Profiles"
+title: "Persistent Player Profiles"
 author: "Anthony Pileggi"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
