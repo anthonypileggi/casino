@@ -1,5 +1,21 @@
 #' Poker R6 Class
 #' @importFrom magrittr "%>%"
+#' @examples
+#' set.seed(101315)
+#' setup()
+#'
+#' # draw poker
+#' x <- Poker$new(who = "Player 1", type = "draw", bet = 10)
+#' x$play()
+#' x$hold(1, 2, 5)
+#' x$draw()
+#'
+#' # stud poker (bet 20)
+#' x <- Poker$new(who = "Player 1", type = "stud", bet = 20)
+#' x$play()
+#'
+#' # clean-up
+#' delete()
 #' @export
 Poker <- R6::R6Class("Poker",
   public = list(
@@ -175,6 +191,14 @@ Poker <- R6::R6Class("Poker",
           net = win - bet
         ) %>%
         dplyr::select(outcome, bet, win, net)
+    },
+
+    # -- see payout table
+    get_payout = function(bet = self$bet) {
+      dplyr::mutate(
+        private$payout,
+        win = bet * multiplier
+      )
     }
   ),
 
