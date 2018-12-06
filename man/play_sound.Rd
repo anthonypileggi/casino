@@ -7,7 +7,7 @@
 play_sound(sound = "fanfare")
 }
 \arguments{
-\item{sound}{character string or number specificying sound (see \code{\link[beepr]{beep}})}
+\item{sound}{character string or number specifying the sound (see \code{\link[beepr]{beep}})}
 }
 \description{
 Play a sound (if possible)
