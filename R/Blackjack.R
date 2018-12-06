@@ -1,5 +1,24 @@
 #' Blackjack R6 Class
 #' @importFrom magrittr "%>%"
+#' @examples
+#' set.seed(101315)
+#' setup()
+#'
+#' # sit at the blackjack table
+#' x <- Blackjack$new(who = "Player 1", bet = 10)
+#'
+#' # play a hand
+#' x$play()
+#'
+#' x$hit()
+#'
+#' x$stand()
+#'
+#' # play a hand blind w/out drawing
+#' x$play()$stand()
+#'
+#' # clean-up
+#' delete()
 #' @export
 Blackjack <- R6::R6Class("Blackjack",
 
