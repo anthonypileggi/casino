@@ -7,7 +7,7 @@ Authors@R: c(
     )
 Description: Play casino games in the R console,
   including poker, blackjack, and a slot machine.
-  Try to build your fortune before you succuomb to the gambler's ruin!
+  Try to build your fortune before you succumb to the gambler's ruin!
 License: MIT + file LICENSE
 URL: https://anthonypileggi.github.io/casino,
     https://github.com/anthonypileggi/casino
