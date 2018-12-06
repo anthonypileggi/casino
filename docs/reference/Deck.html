@@ -88,6 +88,27 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/blackjack.html">Blackjack</a>
+    </li>
+    <li>
+      <a href="../articles/persistent_player_profiles.html">Persisent Player Profiles</a>
+    </li>
+    <li>
+      <a href="../articles/poker.html">Poker</a>
+    </li>
+    <li>
+      <a href="../articles/slots.html">Slot Machine</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -130,13 +151,66 @@
     <p>An object of class <code>R6ClassGenerator</code> of length 24.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># create a new deck</span>
+<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='no'>Deck</span>$<span class='fu'>new</span>()
+<span class='no'>x</span></div><div class='output co'>#&gt; Deck: 
+#&gt;   Decks: 1
+#&gt;   Cards:  52
+#&gt;   Cards dealt:  0
+#&gt;   Cards left:  52
+#&gt;   Next card:  2 ♦s</div><div class='input'>
+<span class='co'># draw a card</span>
+<span class='no'>x</span>$<span class='fu'>draw</span>(<span class='fl'>1</span>)</div><div class='output co'>#&gt; # A tibble: 1 x 2
+#&gt;   value suit 
+#&gt;   &lt;chr&gt; &lt;chr&gt;
+#&gt; 1 2     ♦    </div><div class='input'><span class='no'>x</span></div><div class='output co'>#&gt; Deck: 
+#&gt;   Decks: 1
+#&gt;   Cards:  52
+#&gt;   Cards dealt:  1
+#&gt;   Cards left:  51
+#&gt;   Next card:  3 ♦s</div><div class='input'>
+<span class='co'># draw 10 cards</span>
+<span class='no'>x</span>$<span class='fu'>draw</span>(<span class='fl'>10</span>)</div><div class='output co'>#&gt; # A tibble: 10 x 2
+#&gt;    value suit 
+#&gt;    &lt;chr&gt; &lt;chr&gt;
+#&gt;  1 3     ♦    
+#&gt;  2 A     ♠    
+#&gt;  3 3     ♥    
+#&gt;  4 K     ♦    
+#&gt;  5 10    ♦    
+#&gt;  6 J     ♣    
+#&gt;  7 J     ♠    
+#&gt;  8 Q     ♠    
+#&gt;  9 9     ♣    
+#&gt; 10 A     ♣    </div><div class='input'>
+<span class='co'># check how many cards are left</span>
+<span class='no'>x</span>$<span class='fu'>cards_left</span>()</div><div class='output co'>#&gt; [1] 41</div><div class='input'>
+<span class='co'># reset the deck</span>
+<span class='no'>x</span>$<span class='fu'>shuffle</span>()
+<span class='no'>x</span></div><div class='output co'>#&gt; Deck: 
+#&gt;   Decks: 1
+#&gt;   Cards:  52
+#&gt;   Cards dealt:  0
+#&gt;   Cards left:  52
+#&gt;   Next card:  2 ♠s</div><div class='input'>
+<span class='co'># create a deck composed of 5 decks</span>
+<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='no'>Deck</span>$<span class='fu'>new</span>(<span class='kw'>decks</span> <span class='kw'>=</span> <span class='fl'>5</span>)
+<span class='no'>x</span></div><div class='output co'>#&gt; Deck: 
+#&gt;   Decks: 5
+#&gt;   Cards:  260
+#&gt;   Cards dealt:  0
+#&gt;   Cards left:  260
+#&gt;   Next card:  9 ♥s</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       
       <li><a href="#format">Format</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

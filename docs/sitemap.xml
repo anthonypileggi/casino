@@ -19,6 +19,9 @@
     <loc>https://anthonypileggi.github.io/casino/reference/Slots.html</loc>
   </url>
   <url>
+    <loc>https://anthonypileggi.github.io/casino/reference/delete.html</loc>
+  </url>
+  <url>
     <loc>https://anthonypileggi.github.io/casino/reference/play.html</loc>
   </url>
   <url>
@@ -35,5 +38,17 @@
   </url>
   <url>
     <loc>https://anthonypileggi.github.io/casino/reference/setup.html</loc>
+  </url>
+  <url>
+    <loc>https://anthonypileggi.github.io/casino/articles/blackjack.html</loc>
+  </url>
+  <url>
+    <loc>https://anthonypileggi.github.io/casino/articles/persistent_player_profiles.html</loc>
+  </url>
+  <url>
+    <loc>https://anthonypileggi.github.io/casino/articles/poker.html</loc>
+  </url>
+  <url>
+    <loc>https://anthonypileggi.github.io/casino/articles/slots.html</loc>
   </url>
 </urlset>

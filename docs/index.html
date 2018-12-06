@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Casino Games in R • casino</title>
+<title>Play Casino Games in R • casino</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Casino Games in R">
+<script src="pkgdown.js"></script><meta property="og:title" content="Play Casino Games in R">
 <meta property="og:description" content="Play casino games in the R console,
   including poker, blackjack, and a slot machine.
-  Try to build your fortune before you succomb to the gambler's ruin!">
+  Try to build your fortune before you succuomb to the gambler's ruin!">
 <meta property="og:image" content="https://anthonypileggi.github.io/casino/logo.png">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -52,6 +52,27 @@
 </li>
 <li>
   <a href="reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/blackjack.html">Blackjack</a>
+    </li>
+    <li>
+      <a href="articles/persistent_player_profiles.html">Persisent Player Profiles</a>
+    </li>
+    <li>
+      <a href="articles/poker.html">Poker</a>
+    </li>
+    <li>
+      <a href="articles/slots.html">Slot Machine</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="news/index.html">Changelog</a>
@@ -111,7 +132,7 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <h2 class="hasAnchor">
 <a href="#quick-start" class="anchor"></a>Quick Start</h2>
 <p>Are you getting impatient already? Then use <code><a href="reference/play.html">play()</a></code> to get started immediately.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">casino<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/casino/topics/play">play</a></span>()</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">casino<span class="op">::</span><span class="kw"><a href="https://anthonypileggi.github.io/casino/reference/play.html">play</a></span>()</code></pre></div>
 </div>
 <div id="setup--casino" class="section level2">
 <h2 class="hasAnchor">
@@ -122,7 +143,8 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <span class="co"># create a local file for storing persisent player data</span>
 <span class="kw"><a href="reference/setup.html">setup</a></span>()
 <span class="co">#&gt; No records found.</span>
-<span class="co">#&gt; Storing player records at '/Users/anthony/Documents/casino/.casino'</span></code></pre></div>
+<span class="co">#&gt; Storing player records at '/Users/anthony/Documents/casino/.casino'</span>
+<span class="co">#&gt; Updating value for environment variable 'CASINO_FILE'.</span></code></pre></div>
 <p>This allows us to store player information persistently between games and R sessions.</p>
 </div>
 <div id="create-a-player" class="section level2">
@@ -176,7 +198,7 @@ Blackjack<span class="op">$</span><span class="kw">new</span>(<span class="dt">w
 <span class="co"># play a game</span>
 x<span class="op">$</span><span class="kw"><a href="reference/play.html">play</a></span>()
 <span class="co">#&gt; You bet 10; you have 90 left.</span>
-<span class="co">#&gt;  Hand: J ♥, 2 ♥, 8 ♣, 6 ♣, 8 ♠</span>
+<span class="co">#&gt;  Hand: 2 ♦, 3 ♦, A ♠, 3 ♥, K ♦</span>
 <span class="co">#&gt;  Result: one pair</span>
 <span class="co">#&gt;    You lost -10!</span>
 <span class="co">#&gt;    Now you have 90 in your account.</span>
@@ -185,10 +207,10 @@ x<span class="op">$</span><span class="kw"><a href="reference/play.html">play</a
 <span class="co"># specify a different bet for this game</span>
 x<span class="op">$</span><span class="kw"><a href="reference/play.html">play</a></span>(<span class="dt">bet =</span> <span class="dv">5</span>)
 <span class="co">#&gt; You bet 5; you have 85 left.</span>
-<span class="co">#&gt;  Hand: 9 ♠, 5 ♠, 7 ♦, 4 ♦, 5 ♥</span>
-<span class="co">#&gt;  Result: one pair</span>
-<span class="co">#&gt;    You lost -5!</span>
-<span class="co">#&gt;    Now you have 85 in your account.</span>
+<span class="co">#&gt;  Hand: 10 ♦, J ♣, J ♠, Q ♠, 9 ♣</span>
+<span class="co">#&gt;  Result: one pair (jacks or better)</span>
+<span class="co">#&gt;    You won 0!</span>
+<span class="co">#&gt;    Now you have 90 in your account.</span>
 <span class="co">#&gt; Do you want to `play()` again?</span></code></pre></div>
 </div>
 <div id="poker-5-card-draw" class="section level3">
@@ -199,19 +221,19 @@ x<span class="op">$</span><span class="kw"><a href="reference/play.html">play</a
 
 <span class="co"># play a game</span>
 x<span class="op">$</span><span class="kw"><a href="reference/play.html">play</a></span>()
-<span class="co">#&gt; You bet 20; you have 65 left.</span>
-<span class="co">#&gt;  Hand: A ♦, J ♣, 9 ♣, 5 ♥, A ♥</span>
+<span class="co">#&gt; You bet 20; you have 70 left.</span>
+<span class="co">#&gt;  Hand: 2 ♠, 3 ♥, 3 ♠, 6 ♦, 8 ♦</span>
 <span class="co">#&gt; Choose cards to `hold()`` and then `draw()`.</span>
 
 x<span class="op">$</span><span class="kw">hold</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>)    <span class="co"># hold cards in positions {1, 2, 5}</span>
-<span class="co">#&gt;  Hand: A ♦, J ♣, 9 ♣, 5 ♥, A ♥</span>
+<span class="co">#&gt;  Hand: 2 ♠, 3 ♥, 3 ♠, 6 ♦, 8 ♦</span>
 <span class="co">#&gt; Choose cards to `hold()`` and then `draw()`.</span>
 
 x<span class="op">$</span><span class="kw">draw</span>()           <span class="co"># draw new cards for positions {3, 4}</span>
-<span class="co">#&gt;  Hand: A ♦, J ♣, A ♥, 3 ♣, K ♠</span>
-<span class="co">#&gt;  Result: one pair (jacks or better)</span>
-<span class="co">#&gt;    You won 0!</span>
-<span class="co">#&gt;    Now you have 85 in your account.</span>
+<span class="co">#&gt;  Hand: 2 ♠, 3 ♥, 8 ♦, K ♦, 7 ♣</span>
+<span class="co">#&gt;  Result: K high</span>
+<span class="co">#&gt;    You lost -20!</span>
+<span class="co">#&gt;    Now you have 70 in your account.</span>
 <span class="co">#&gt; Do you want to `play()` again?</span></code></pre></div>
 </div>
 <div id="blackjack" class="section level3">
@@ -221,18 +243,13 @@ x<span class="op">$</span><span class="kw">draw</span>()           <span class="
 <span class="co">#&gt; Loading player profile...</span>
 
 x<span class="op">$</span><span class="kw"><a href="reference/play.html">play</a></span>()<span class="op">$</span><span class="kw">stand</span>()
-<span class="co">#&gt; You bet 25; you have 60 left.</span>
-<span class="co">#&gt; You got Blackjack!</span>
-<span class="co">#&gt; Game over! player wins</span>
-<span class="co">#&gt;   You won 25!</span>
-<span class="co">#&gt;   Now you have 110 in your account.</span>
-<span class="co">#&gt; Blackjack (w/  1  decks): </span>
-<span class="co">#&gt; Player: Player 1</span>
-<span class="co">#&gt; Bank: 110</span>
-<span class="co">#&gt; Start a new game with `play()`.</span>
-<span class="co">#&gt; Game over! player wins</span>
-<span class="co">#&gt;   You won 25!</span>
-<span class="co">#&gt;   Now you have 160 in your account.</span></code></pre></div>
+<span class="co">#&gt; You bet 25; you have 45 left.</span>
+<span class="co">#&gt;  Player Hand: {7, A} = 18</span>
+<span class="co">#&gt;  Dealer Hand: {?, A} = ?</span>
+<span class="co">#&gt; Will you `hit()` or `stand()`?</span>
+<span class="co">#&gt; Game over! push</span>
+<span class="co">#&gt;   You won 0!</span>
+<span class="co">#&gt;   Now you have 70 in your account.</span></code></pre></div>
 </div>
 <div id="slot-machine" class="section level3">
 <h3 class="hasAnchor">
@@ -241,22 +258,22 @@ x<span class="op">$</span><span class="kw"><a href="reference/play.html">play</a
 <span class="co">#&gt; Loading player profile...</span>
 
 x<span class="op">$</span><span class="kw"><a href="reference/play.html">play</a></span>()
-<span class="co">#&gt; You bet 1; you have 159 left.</span>
-<span class="co">#&gt;  Reels: * $ &amp;</span>
+<span class="co">#&gt; You bet 1; you have 69 left.</span>
+<span class="co">#&gt;  Reels: &amp; &amp; *</span>
 <span class="co">#&gt;    You lost -1!</span>
-<span class="co">#&gt;    Now you have 159 in your account.</span>
+<span class="co">#&gt;    Now you have 69 in your account.</span>
 <span class="co">#&gt; Do you want to `play()` again?</span>
 
 <span class="co"># set the `spins` argument to play &gt; 1 game at a time</span>
 x<span class="op">$</span><span class="kw"><a href="reference/play.html">play</a></span>(<span class="dt">spins =</span> <span class="dv">2</span>)
-<span class="co">#&gt; You bet 1; you have 158 left.</span>
-<span class="co">#&gt;  Reels: &amp; * &amp;</span>
+<span class="co">#&gt; You bet 1; you have 68 left.</span>
+<span class="co">#&gt;  Reels: * &amp; ^</span>
 <span class="co">#&gt;    You lost -1!</span>
-<span class="co">#&gt;    Now you have 158 in your account.</span>
-<span class="co">#&gt; You bet 1; you have 157 left.</span>
-<span class="co">#&gt;  Reels: # &amp; *</span>
+<span class="co">#&gt;    Now you have 68 in your account.</span>
+<span class="co">#&gt; You bet 1; you have 67 left.</span>
+<span class="co">#&gt;  Reels: * ^ %</span>
 <span class="co">#&gt;    You lost -1!</span>
-<span class="co">#&gt;    Now you have 157 in your account.</span>
+<span class="co">#&gt;    Now you have 67 in your account.</span>
 <span class="co">#&gt; Do you want to `play()` again?</span></code></pre></div>
 </div>
 </div>
@@ -316,16 +333,16 @@ player<span class="op">$</span><span class="kw">summary</span>()
 <span class="co">#&gt; # A tibble: 1 x 4</span>
 <span class="co">#&gt;   games   bet   win   net</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1   158   720   672   -48</span>
+<span class="co">#&gt; 1   157   739   566  -173</span>
 
 <span class="co"># By Game</span>
 player<span class="op">$</span><span class="kw">summary</span>(game)  
 <span class="co">#&gt; # A tibble: 3 x 5</span>
 <span class="co">#&gt;   game      games   bet   win   net</span>
 <span class="co">#&gt;   &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Blackjack    52   300   310    10</span>
-<span class="co">#&gt; 2 Poker        53   367    93  -274</span>
-<span class="co">#&gt; 3 Slots        53    53   269   216</span></code></pre></div>
+<span class="co">#&gt; 1 Blackjack    51   275   245   -30</span>
+<span class="co">#&gt; 2 Poker        53   411   204  -207</span>
+<span class="co">#&gt; 3 Slots        53    53   117    64</span></code></pre></div>
 <p>Let’s relive the excitement!</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">player<span class="op">$</span><span class="kw">plot</span>()</code></pre></div>
 <p><img src="reference/figures/plot-history-1.png" width="768"></p>
