@@ -1,0 +1,86 @@
+---
+title: "Persisent Player Profiles"
+author: "Anthony Pileggi"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+Player information is stored in a local file.  By default, this file is call `.casino`
+and it is placed in the current working directory.
+
+```{r}
+library(casino)
+
+# create a new file to store player profiles
+setup()
+
+# create some players
+Player$new("Player 1")
+
+# check the available players
+players()
+```
+
+
+# Multiple Players
+You can store multiple players in the same profile file.
+
+```{r}
+# create more players
+Player$new("Player 2")
+Player$new("Player 3")
+
+# check the available players
+players()
+```
+
+
+# Multiple Profile Files
+If you want to store multiple player profiles, you can specify the filename.
+
+```{r}
+# first profile
+setup(".bellagio")
+Player$new("Player 1")
+Player$new("Player 2")
+players()
+
+# second profile
+setup(".caesars")
+Player$new("Player 3")
+Player$new("Player 4")
+players()
+
+# now switch back to the first one
+setup(".bellagio")
+players()
+```
+
+
+# Delete Profiles
+If you want to delete all players in the current profile and reset the `casino` package, use the `delete()` function.
+
+```{r}
+# delete current profile (.bellagio)
+delete()
+
+# delete a different profile (.caesars)
+setup(".caesars")
+delete()
+
+# delete the default profile (.casino)
+setup()
+delete()
+```

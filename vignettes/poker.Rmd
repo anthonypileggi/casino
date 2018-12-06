@@ -1,0 +1,77 @@
+---
+title: "Poker"
+author: "Anthony Pileggi"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+set.seed(101315)
+```
+
+## Variants
+
+There are two poker variants available:
+
+  - 5-card Draw Poker
+  - 5-card Stud Poker
+
+
+## Example
+
+```{r}
+library(casino)
+
+# Setup a new casino
+setup(".paris")
+```
+
+
+### 5-card Draw
+
+```{r}
+x <- Poker$new(who = "Gritty", type = "draw", bet = 20)
+
+# play one hand
+x$play()
+
+x$hold(1, 2, 5)    # hold cards in positions {1, 2, 5}
+
+x$draw()           # draw new cards for positions {3, 4}
+```
+
+
+### 5-card Stud
+
+```{r}
+
+x <- Poker$new(who = "Gritty", type = "stud", bet = 10)
+
+# play one hand
+x$play()
+
+# play 2 hands back-to-back
+x$play()$play(bet = 5)
+
+```
+
+## Payouts
+
+```{r, echo = FALSE, results = "asis"}
+# get payout table (based on betting 25)
+knitr::kable(x$get_payout())
+```
+
+```{r, include = FALSE}
+# delete records
+delete()
+```

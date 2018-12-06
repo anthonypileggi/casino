@@ -1,0 +1,67 @@
+---
+title: "Blackjack"
+author: "Anthony"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+set.seed(101315)
+```
+
+You can play Blackjack against the dealer.
+
+## Payouts
+
+Outcome | Multiplier
+--- | ---
+Dealer Wins | 0x
+Player Wins | 2x
+
+
+## Example
+
+```{r}
+library(casino)
+
+# Setup a new casino
+setup(".wynn")
+
+# Sit at the blackjack table with default bet of 25
+x <- Blackjack$new(who = "Gritty", bet = 25)
+
+# Play a hand
+x$play()
+
+x$hit()
+
+x$stand()
+
+# Play another
+x$play()
+
+x$stand()
+
+# Play one last hand, and bet it all!
+x$play(bet = 100)
+
+x$hit()
+
+x$stand()
+```
+
+![](https://media.giphy.com/media/1rK7WULnc8YgdmVIBz/giphy.gif)
+
+```{r, include = FALSE}
+# delete records
+delete()
+```

@@ -1,0 +1,52 @@
+---
+title: "Slot Machine"
+author: "Anthony Pileggi"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+set.seed(101315)
+```
+
+
+## Example
+
+```{r}
+library(casino)
+
+# Setup a new casino
+setup(".mgm")
+
+# Sit at a slot machine with default bet of 5
+x <- Slots$new(who = "Gritty", bet = 5)
+
+# Play a game
+x$play()
+
+# Play 5 games
+x$play(spins = 5)
+```
+
+
+## Payouts
+
+```{r, echo = FALSE, results = "asis"}
+# get payout table (based on betting 25)
+knitr::kable(x$get_payout())
+```
+
+```{r, include = FALSE}
+# delete records
+delete()
+```
+
