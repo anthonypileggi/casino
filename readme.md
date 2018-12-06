@@ -16,6 +16,12 @@ Overview
 
 Play casino games in the R console!
 
+Available games:
+
+-   Poker (5-card draw/stud)
+-   Blackjack
+-   Slot machine
+
 Installation
 ------------
 
@@ -27,7 +33,7 @@ devtools::install_github("anthonypileggi/casino")
 Quick Start
 -----------
 
-Use the `play()` function to start playing immediately. It provides a guided casino experience.
+Are you getting impatient already? Then use `play()` to get started immediately.
 
 ``` r
 casino::play()
@@ -45,6 +51,7 @@ library(casino)
 setup()
 #> No records found.
 #> Storing player records at '/Users/anthony/Documents/casino/.casino'
+#> Updating value for environment variable 'CASINO_FILE'.
 ```
 
 This allows us to store player information persistently between games and R sessions.
@@ -108,8 +115,8 @@ x <- Poker$new(who = "Player 1", type = "stud", bet = 10)
 # play a game
 x$play()
 #> You bet 10; you have 90 left.
-#>  Hand: A ♦, K ♥, 4 ♣, J ♠, 6 ♥
-#>  Result: A high
+#>  Hand: 2 ♦, 3 ♦, A ♠, 3 ♥, K ♦
+#>  Result: one pair
 #>    You lost -10!
 #>    Now you have 90 in your account.
 #> Do you want to `play()` again?
@@ -117,10 +124,10 @@ x$play()
 # specify a different bet for this game
 x$play(bet = 5)
 #> You bet 5; you have 85 left.
-#>  Hand: 3 ♥, J ♦, 9 ♠, 2 ♦, 4 ♠
-#>  Result: J high
-#>    You lost -5!
-#>    Now you have 85 in your account.
+#>  Hand: 10 ♦, J ♣, J ♠, Q ♠, 9 ♣
+#>  Result: one pair (jacks or better)
+#>    You won 0!
+#>    Now you have 90 in your account.
 #> Do you want to `play()` again?
 ```
 
@@ -132,19 +139,19 @@ x <- Poker$new(who = "Player 1", type = "draw", bet = 20)
 
 # play a game
 x$play()
-#> You bet 20; you have 65 left.
-#>  Hand: K ♠, K ♥, 5 ♦, 4 ♣, 7 ♠
+#> You bet 20; you have 70 left.
+#>  Hand: 2 ♠, 3 ♥, 3 ♠, 6 ♦, 8 ♦
 #> Choose cards to `hold()`` and then `draw()`.
 
 x$hold(1, 2, 5)    # hold cards in positions {1, 2, 5}
-#>  Hand: K ♠, K ♥, 5 ♦, 4 ♣, 7 ♠
+#>  Hand: 2 ♠, 3 ♥, 3 ♠, 6 ♦, 8 ♦
 #> Choose cards to `hold()`` and then `draw()`.
 
 x$draw()           # draw new cards for positions {3, 4}
-#>  Hand: K ♠, K ♥, 7 ♠, Q ♠, 2 ♣
-#>  Result: one pair (jacks or better)
-#>    You won 0!
-#>    Now you have 85 in your account.
+#>  Hand: 2 ♠, 3 ♥, 8 ♦, K ♦, 7 ♣
+#>  Result: K high
+#>    You lost -20!
+#>    Now you have 70 in your account.
 #> Do you want to `play()` again?
 ```
 
@@ -155,13 +162,13 @@ x <- Blackjack$new(who = "Player 1", bet = 25)
 #> Loading player profile...
 
 x$play()$stand()
-#> You bet 25; you have 60 left.
-#>  Player Hand: {6, 5} = 11
-#>  Dealer Hand: {?, 2} = ?
+#> You bet 25; you have 45 left.
+#>  Player Hand: {7, A} = 18
+#>  Dealer Hand: {?, A} = ?
 #> Will you `hit()` or `stand()`?
-#> Game over! dealer wins
-#>   You lost -25!
-#>   Now you have 60 in your account.
+#> Game over! push
+#>   You won 0!
+#>   Now you have 70 in your account.
 ```
 
 ### Slot Machine
@@ -171,22 +178,22 @@ x <- Slots$new(who = "Player 1", bet = 1)
 #> Loading player profile...
 
 x$play()
-#> You bet 1; you have 59 left.
+#> You bet 1; you have 69 left.
 #>  Reels: & & *
 #>    You lost -1!
-#>    Now you have 59 in your account.
+#>    Now you have 69 in your account.
 #> Do you want to `play()` again?
 
 # set the `spins` argument to play > 1 game at a time
 x$play(spins = 2)
-#> You bet 1; you have 58 left.
-#>  Reels: * % *
+#> You bet 1; you have 68 left.
+#>  Reels: * & ^
 #>    You lost -1!
-#>    Now you have 58 in your account.
-#> You bet 1; you have 57 left.
-#>  Reels: % % *
+#>    Now you have 68 in your account.
+#> You bet 1; you have 67 left.
+#>  Reels: * ^ %
 #>    You lost -1!
-#>    Now you have 57 in your account.
+#>    Now you have 67 in your account.
 #> Do you want to `play()` again?
 ```
 
@@ -252,16 +259,16 @@ player$summary()
 #> # A tibble: 1 x 4
 #>   games   bet   win   net
 #>   <int> <dbl> <dbl> <dbl>
-#> 1   157   598   401  -197
+#> 1   157   739   566  -173
 
 # By Game
 player$summary(game)  
 #> # A tibble: 3 x 5
 #>   game      games   bet   win   net
 #>   <chr>     <int> <dbl> <dbl> <dbl>
-#> 1 Blackjack    51   275   230   -45
-#> 2 Poker        53   270    70  -200
-#> 3 Slots        53    53   101    48
+#> 1 Blackjack    51   275   245   -30
+#> 2 Poker        53   411   204  -207
+#> 3 Slots        53    53   117    64
 ```
 
 Let's relive the excitement!

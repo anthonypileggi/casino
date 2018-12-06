@@ -10,6 +10,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "man/figures/"
 )
+
+set.seed(101315)
 ```
 
 
@@ -199,3 +201,8 @@ player$plot()
 ```
 
 Well, I guess we'll you'll be back tomorrow.  See you then!
+
+```{r, echo = FALSE, include = FALSE}
+# clean-up player information created while compiling readme
+delete()
+```
