@@ -40,15 +40,15 @@
     <loc>https://anthonypileggi.github.io/casino/reference/setup.html</loc>
   </url>
   <url>
-    <loc>https://anthonypileggi.github.io/casino/articles/blackjack.html</loc>
+    <loc>https://anthonypileggi.github.io/casino/articles/games/blackjack.html</loc>
+  </url>
+  <url>
+    <loc>https://anthonypileggi.github.io/casino/articles/games/poker.html</loc>
+  </url>
+  <url>
+    <loc>https://anthonypileggi.github.io/casino/articles/games/slots.html</loc>
   </url>
   <url>
     <loc>https://anthonypileggi.github.io/casino/articles/persistent_player_profiles.html</loc>
-  </url>
-  <url>
-    <loc>https://anthonypileggi.github.io/casino/articles/poker.html</loc>
-  </url>
-  <url>
-    <loc>https://anthonypileggi.github.io/casino/articles/slots.html</loc>
   </url>
 </urlset>

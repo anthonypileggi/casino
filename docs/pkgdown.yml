@@ -2,10 +2,10 @@ pandoc: 1.19.2.1
 pkgdown: 1.1.0
 pkgdown_sha: ~
 articles:
-  blackjack: blackjack.html
+  blackjack: games/blackjack.html
+  poker: games/poker.html
+  slots: games/slots.html
   persistent_player_profiles: persistent_player_profiles.html
-  poker: poker.html
-  slots: slots.html
 urls:
   reference: https://anthonypileggi.github.io/casino/reference
   article: https://anthonypileggi.github.io/casino/articles
