@@ -1,6 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
+* Removed the redundant "in R" in the Title
 * Converted `beepr` to a Suggested dependency.
 * Updated all functions to only play sounds when the `beepr` package is available.
 

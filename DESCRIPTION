@@ -1,6 +1,6 @@
 Package: casino
 Type: Package
-Title: Play Casino Games in R
+Title: Play Casino Games
 Version: 0.1.0
 Authors@R: c(
     person("Anthony", "Pileggi", , "apileggi20@gmail.com", c("aut", "cre"))
