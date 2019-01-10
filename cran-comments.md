@@ -6,7 +6,7 @@ This is a resubmission. In this version I have:
 * Updated all functions to only play sounds when the `beepr` package is available.
 
 ## Test environments
-* local OS X install, R 3.5.1
+* local OS X install, R 3.5.2
 * win-builder (devel and release)
 * r-hub builder (devel and release)
 
