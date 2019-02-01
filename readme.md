@@ -1,48 +1,57 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-casino <img src="man/figures/logo.png" align="right" alt="" width="120" />
-==========================================================================
 
-> Welcome to the casino, we've got fun and games
->
+# casino <img src="man/figures/logo.png" align="right" alt="" width="120" />
+
+> Welcome to the casino, we’ve got fun and games
+> 
 > We got everything you want and we know your name
->
+> 
 > We are a place where you can find whatever you may need
->
-> And if you got no money, don't worry! You can play for "free"!
+> 
+> And if you got no money, don’t worry\! You can play for “free”\!
 
-Overview
---------
+<!-- badges: start -->
 
-Play casino games in the R console!
+[![CRAN
+status](https://www.r-pkg.org/badges/version-last-release/casino)](https://cran.r-project.org/package=casino)
+[![CRAN
+downloads](http://cranlogs.r-pkg.org/badges/casino)](https://cran.r-project.org/package=casino)
+<!-- badges: end -->
+
+## Overview
+
+Play casino games in the R console\!
 
 Available games:
 
--   Poker (5-card draw/stud)
--   Blackjack
--   Slot machine
+  - Poker (5-card draw/stud)
+  - Blackjack
+  - Slot machine
 
-Installation
-------------
+## Installation
 
 ``` r
+# Install the CRAN version
+install.packages("casino")
+
 # Install development version from GitHub
 devtools::install_github("anthonypileggi/casino")
 ```
 
-Quick Start
------------
+## Quick Start
 
-Are you getting impatient already? Then use `play()` to get started immediately.
+Are you getting impatient already? Then use `play()` to get started
+immediately.
 
 ``` r
 casino::play()
 ```
 
-Setup (`.casino`)
------------------
+## Setup (`.casino`)
 
-All players must agree to our policies on recording activity. If you do not agree, you cannot play. House rules!
+All players must agree to our policies on recording activity. If you do
+not agree, you cannot play. House rules\!
 
 ``` r
 library(casino)
@@ -54,10 +63,10 @@ setup()
 #> Updating value for environment variable 'CASINO_FILE'.
 ```
 
-This allows us to store player information persistently between games and R sessions.
+This allows us to store player information persistently between games
+and R sessions.
 
-Create a Player
----------------
+## Create a Player
 
 You can create a new player manually.
 
@@ -101,10 +110,10 @@ players()
 #> 2 Player 2 100.000000
 ```
 
-Play Casino Games
------------------
+## Play Casino Games
 
-Now it's time to head off to the casino! What do you want to play first?!
+Now it’s time to head off to the casino\! What do you want to play
+first?\!
 
 ### Poker (5-card stud)
 
@@ -197,11 +206,11 @@ x$play(spins = 2)
 #> Do you want to `play()` again?
 ```
 
-I think I have a gambling problem
----------------------------------
+## I think I have a gambling problem
 
-If you want to play a lot of games, you can write a script.
-Just make sure to silence the output (`verbose = FALSE`) and sounds (`sound = FALSE`).
+If you want to play a lot of games, you can write a script.  
+Just make sure to silence the output (`verbose = FALSE`) and sounds
+(`sound = FALSE`).
 
 ``` r
 # poker (stud)
@@ -226,16 +235,14 @@ suppressMessages(x$play(spins = 50))
 #> Do you want to `play()` again?
 ```
 
-Ok, now I lost everything...
-----------------------------
+## Ok, now I lost everything…
 
 If you run out of money, the Bank will immediately loan you 100.
 
-> You: "So, what's the interest rate on this loan?"
-> Bank: "Oh, don't worry. It's very reasonable..."
+> You: “So, what’s the interest rate on this loan?”  
+> Bank: “Oh, don’t worry. It’s very reasonable…”
 
-Wait, how much did you say I owe?
----------------------------------
+## Wait, how much did you say I owe?
 
 ``` r
 # player profile is stored in `$who` of a game object
@@ -245,10 +252,9 @@ player$debt()
 #> [1] 300
 ```
 
-It's closing time...
---------------------
+## It’s closing time…
 
-What a fun day at the casino! Or, was it?
+What a fun day at the casino\! Or, was it?
 
 ``` r
 # player profile is stored in `$who` of a game object
@@ -271,12 +277,12 @@ player$summary(game)
 #> 3 Slots        53    53   117    64
 ```
 
-Let's relive the excitement!
+Let’s relive the excitement\!
 
 ``` r
 player$plot()
 ```
 
-![](man/figures/plot-history-1.png)
+![](man/figures/plot-history-1.png)<!-- -->
 
-Well, I guess we'll you'll be back tomorrow. See you then!
+Well, I guess we’ll you’ll be back tomorrow. See you then\!

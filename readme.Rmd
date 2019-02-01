@@ -25,6 +25,10 @@ set.seed(101315)
 >
 > And if you got no money, don't worry!  You can play for "free"!  
 
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version-last-release/casino)](https://cran.r-project.org/package=casino)
+[![CRAN downloads](http://cranlogs.r-pkg.org/badges/casino)](https://cran.r-project.org/package=casino)
+<!-- badges: end -->
 
 ## Overview
 
@@ -40,6 +44,9 @@ Available games:
 ## Installation
 
 ```{r, eval = FALSE}
+# Install the CRAN version
+install.packages("casino")
+
 # Install development version from GitHub
 devtools::install_github("anthonypileggi/casino")
 ```
